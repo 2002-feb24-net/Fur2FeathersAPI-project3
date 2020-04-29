@@ -13,6 +13,7 @@ using Microsoft.OpenApi.Models;
 
 namespace Furs2FeathersAPI
 {
+    //dotnet ef dbcontext scaffold "Host=localhost;Database=mydatabase;Username=postgres;Password=35122jhb" Npgsql.EntityFrameworkCore.PostgreSQL -o Models
     public class Startup
     {
         private const string CorsPolicyName = "AllowConfiguredOrigins";

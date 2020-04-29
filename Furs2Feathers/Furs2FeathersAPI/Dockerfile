@@ -7,10 +7,11 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["Furs2FeathersAPI/Furs2FeathersAPI.csproj", "Furs2FeathersAPI/"]
+COPY ["./Furs2FeathersAPI.csproj", "Furs2FeathersAPI/"]
 RUN dotnet restore "Furs2FeathersAPI/Furs2FeathersAPI.csproj"
-COPY . .
+
 WORKDIR "/src/Furs2FeathersAPI"
+COPY . .
 RUN dotnet build "Furs2FeathersAPI.csproj" -c Release -o /app/build
 
 FROM build AS publish
