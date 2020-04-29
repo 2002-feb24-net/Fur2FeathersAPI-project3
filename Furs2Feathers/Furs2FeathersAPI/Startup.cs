@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Furs2Feathers.DataAccess.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -33,7 +35,7 @@ namespace Furs2FeathersAPI
             // (the existing migrations are SQL-Server-specific, but the model itself is not)
 
             // this should be the name of a connection string.
-           /* string whichDb = Configuration["DatabaseConnection"];
+            string whichDb = Configuration["DatabaseConnection"];
             if (whichDb is null)
             {
                 throw new InvalidOperationException($"No value found for \"DatabaseConnection\"; unable to connect to a database.");
@@ -43,18 +45,18 @@ namespace Furs2FeathersAPI
             if (connection is null)
             {
                 throw new InvalidOperationException($"No value found for \"{whichDb}\" connection; unable to connect to a database.");
-            }*/
+            }
 
-            /*if (whichDb.Contains("PostgreSql", StringComparison.InvariantCultureIgnoreCase))
+            if (whichDb.Contains("PostgreSql", StringComparison.InvariantCultureIgnoreCase))
             {
-                services.AddDbContext<NotesContext>(options =>
+                services.AddDbContext<f2fdbContext>(options =>
                     options.UseNpgsql(connection));
             }
             else
             {
-                services.AddDbContext<NotesContext>(options =>
+                services.AddDbContext<f2fdbContext>(options =>
                     options.UseSqlServer(connection));
-            }*/
+            }
 
            /* services.AddScoped<INoteRepository, NoteRepository>();*/
 

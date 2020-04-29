@@ -11,7 +11,7 @@ version: '3.7'
 services:
 
   web:
-    build: NotesService
+    build: Furs2Feathers
     image: 2002-notes-api:1.0
     depends_on:
       - data
@@ -20,8 +20,8 @@ services:
     networks:
       - default
     environment:
-      DatabaseConnection: NotesDbPostgreSqlDockerCompose
-      ConnectionStrings__NotesDbPostgreSqlDockerCompose: Host=data;Database=NotesDb;Username=postgres;Password=Pass@word
+      DatabaseConnection: f2fdbPostgreSqlDockerCompose
+      ConnectionStrings__f2fdbPostgreSqlDockerCompose: Host=data;Database=f2fdb;Username=postgres;Password=35122jhb
       EnsureDatabaseCreated: 'true'
       CorsOrigins__0: http://localhost:4200
       UseHttpsRedirection: 'false'
@@ -33,7 +33,7 @@ services:
     networks:
       - default
     environment:
-      POSTGRES_PASSWORD: Pass@word
+      POSTGRES_PASSWORD: 35122jhb
 
 networks:
   default:
