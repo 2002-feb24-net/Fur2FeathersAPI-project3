@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
-namespace Furs2FeathersAPI.Models
+namespace Furs2Feathers.Domain.Models
 {
-    public partial class PlanProLabels
+    public class PlanProLabels
     {
         public int PlanProLabelsId { get; set; }
         public string Labels { get; set; }
         public int? PlanId { get; set; }
 
-        public virtual Plan Plan { get; set; }
+        public Plan Plan { get; set; }
     }
 }

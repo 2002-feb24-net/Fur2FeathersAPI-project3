@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Furs2FeathersAPI.Models
+namespace Furs2Feathers.DataAccess.Models
 {
     public partial class PlanReviews
     {

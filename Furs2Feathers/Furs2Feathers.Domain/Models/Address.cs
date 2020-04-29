@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
-namespace Furs2FeathersAPI.Models
+namespace Furs2Feathers.Domain.Models
 {
-    public partial class Address
+    public class Address
     {
-        public Address()
-        {
-            Customer = new HashSet<Customer>();
-        }
-
         public int AddressId { get; set; }
         public string City { get; set; }
         public string Street { get; set; }
@@ -17,6 +13,6 @@ namespace Furs2FeathersAPI.Models
         public string Zip { get; set; }
         public string Country { get; set; }
 
-        public virtual ICollection<Customer> Customer { get; set; }
+        public List<Customer> Customer { get; set; } = new List<Customer>();
     }
 }
