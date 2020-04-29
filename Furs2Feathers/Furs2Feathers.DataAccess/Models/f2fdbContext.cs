@@ -1,8 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace Furs2FeathersAPI.Models
+namespace Furs2Feathers.DataAccess.Models
 {
     public partial class f2fdbContext : DbContext
     {
