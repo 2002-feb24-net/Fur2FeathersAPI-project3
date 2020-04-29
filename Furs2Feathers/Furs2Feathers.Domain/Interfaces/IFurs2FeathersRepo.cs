@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Furs2Feathers.Domain.Interfaces
 {
-    interface IFurs2FeathersRepo
+    public interface IFurs2FeathersRepo
     {
     }
 }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Furs2Feathers.DataAccess
 {
-    class Mapper
+    public class Mapper
     {
     }
 }
