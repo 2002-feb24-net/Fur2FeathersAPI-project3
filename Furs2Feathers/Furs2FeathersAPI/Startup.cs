@@ -63,7 +63,7 @@ namespace Furs2FeathersAPI
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Notes API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Furs2Feathers API", Version = "v1" });
             });
 
             // support switching between database providers using runtime configuration
