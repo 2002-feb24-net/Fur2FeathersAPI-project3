@@ -12,7 +12,6 @@ services:
 
   web:
     build: Furs2Feathers
-    image: fur-2-feathers-api:1.0
     depends_on:
       - data
     ports:
