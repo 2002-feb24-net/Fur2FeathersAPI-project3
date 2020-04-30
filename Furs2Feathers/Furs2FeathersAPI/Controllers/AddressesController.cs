@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Furs2Feathers.DataAccess.Models;
+using Furs2Feathers.Domain.Interfaces;
 
 namespace Furs2FeathersAPI.Controllers
 {
@@ -14,36 +15,42 @@ namespace Furs2FeathersAPI.Controllers
     public class AddressesController : ControllerBase
     {
         private readonly f2fdbContext _context;
+        private readonly IAddressRepository addressRepo;
 
-        public AddressesController(f2fdbContext context)
+        // This controller is decoupled from DbContext except for the PUT method
+
+
+        public AddressesController(f2fdbContext context, IAddressRepository locationRepository)
         {
             _context = context;
+            addressRepo = locationRepository;
         }
 
         // GET: api/Addresses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Address>>> GetAddress()
+        public async Task<ActionResult<IEnumerable<Furs2Feathers.Domain.Models.Address>>> GetAddress()
         {
-            return await _context.Address.ToListAsync();
+            var list = await addressRepo.ToListAsync();
+            return Ok(list);
         }
 
         // GET: api/Addresses/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Address>> GetAddress(int id)
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Address>> GetAddress(int id)
         {
-            var address = await _context.Address.FindAsync(id);
+            var address = await addressRepo.FindAsync(id);
 
             if (address == null)
             {
                 return NotFound();
             }
 
-            return address;
+            return Ok(address);
         }
 
-        // PUT: api/Addresses/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+       /* // PUT: api/Addresses/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAddress(int id, Address address)
         {
@@ -56,7 +63,7 @@ namespace Furs2FeathersAPI.Controllers
 
             try
             {
-                await _context.SaveChangesAsync();
+                await addressRepo.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -71,53 +78,39 @@ namespace Furs2FeathersAPI.Controllers
             }
 
             return NoContent();
-        }
+        }*/
 
         // POST: api/Addresses
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Address>> PostAddress(Address address)
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Address>> PostAddress(Furs2Feathers.Domain.Models.Address address)
         {
-            _context.Address.Add(address);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (AddressExists(address.AddressId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            addressRepo.Add(address);
+            await addressRepo.SaveChangesAsync();
 
             return CreatedAtAction("GetAddress", new { id = address.AddressId }, address);
         }
 
         // DELETE: api/Addresses/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Address>> DeleteAddress(int id)
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Address>> DeleteAddress(int id)
         {
-            var address = await _context.Address.FindAsync(id);
+            var address = await addressRepo.FindAsync(id);
             if (address == null)
             {
                 return NotFound();
             }
 
-            _context.Address.Remove(address);
-            await _context.SaveChangesAsync();
+            addressRepo.Remove(address);
+            await addressRepo.SaveChangesAsync();
 
-            return address;
+            return Ok(address); //should be 204
         }
 
         private bool AddressExists(int id)
         {
-            return _context.Address.Any(e => e.AddressId == id);
+            return addressRepo.Any(e => e.AddressId == id);
         }
     }
 }
