@@ -13,9 +13,9 @@ namespace Furs2FeathersAPI.Controllers
     [ApiController]
     public class EmployeesController : ControllerBase
     {
-        private readonly f2fdbContext _context;
+        private readonly Furs2FeathersDbContext _context;
 
-        public EmployeesController(f2fdbContext context)
+        public EmployeesController(Furs2FeathersDbContext context)
         {
             _context = context;
         }

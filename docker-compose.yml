@@ -1,7 +1,7 @@
-# to run api and db in docker (debugger not possible): docker-compose --build up
+# to run api and db in docker (debugger not possible): docker-compose up --build
 
 # to run db in docker and api outside docker (debugger possible): docker-compose up data
-#   and if you have Docker Desktop, set in user secrets: "DatabaseConnection": "NotesDbPostgreSqlDockerDesktop"
+#   and if you have Docker Desktop, set in user secrets: "DatabaseConnection": "Furs2FeathersdbPostgreSqlDockerDesktop"
 
 # api accessible at localhost:8000 / 192.168.99.100:8000
 # db accessible at localhost:5432 / 192.168.99.100:5432
@@ -12,7 +12,7 @@ services:
 
   web:
     build: Furs2Feathers
-
+    image: Furs2FeathersAPI:1.0
     depends_on:
       - data
     ports:
@@ -20,10 +20,11 @@ services:
     networks:
       - default
     environment:
-      DatabaseConnection: f2fdbPostgreSqlDockerCompose
-      ConnectionStrings__f2fdbPostgreSqlDockerCompose: Host=data;Database=f2fdb;Username=postgres;Password=35122jhb
+      DatabaseConnection: Furs2FeathersDbPostgreSqlDockerCompose
+      ConnectionStrings__Furs2FeathersDbPostgreSqlDockerCompose: Host=data;Database=Furs2FeathersDb;Username=postgres;Password=35122jhb
       EnsureDatabaseCreated: 'true'
       CorsOrigins__0: http://localhost:4200
+      CorsOrigins__1: http://192.168.99.100:4200
       UseHttpsRedirection: 'false'
 
   data:

@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Furs2Feathers.DataAccess.Models
 {
-    public partial class f2fdbContext : DbContext
+    public partial class Furs2FeathersDbContext : DbContext
     {
-        public f2fdbContext()
+        public Furs2FeathersDbContext()
         {
         }
 
-        public f2fdbContext(DbContextOptions<f2fdbContext> options)
+        public Furs2FeathersDbContext(DbContextOptions<Furs2FeathersDbContext> options)
             : base(options)
         {
         }
@@ -25,14 +25,14 @@ namespace Furs2Feathers.DataAccess.Models
         public virtual DbSet<PlanReviews> PlanReviews { get; set; }
         public virtual DbSet<Policies> Policies { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseNpgsql("Host=localhost;Database=f2fdb;Username=postgres;Password=35122jhb");
             }
-        }
+        }*/
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

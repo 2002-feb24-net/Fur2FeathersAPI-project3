@@ -36,7 +36,7 @@ namespace Furs2FeathersAPI
             // (the existing migrations are SQL-Server-specific, but the model itself is not)
 
             // this should be the name of a connection string.
-            string whichDb = Configuration["DatabaseConnection"];
+            string whichDb = Configuration["Furs2FeathersDbPostgreSqlDockerDesktop"];
             if (whichDb is null)
             {
                 throw new InvalidOperationException($"No value found for \"DatabaseConnection\"; unable to connect to a database.");
@@ -50,12 +50,12 @@ namespace Furs2FeathersAPI
 
             if (whichDb.Contains("PostgreSql", StringComparison.InvariantCultureIgnoreCase))
             {
-                services.AddDbContext<f2fdbContext>(options =>
+                services.AddDbContext<Furs2FeathersDbContext>(options =>
                     options.UseNpgsql(connection));
             }
             else
             {
-                services.AddDbContext<f2fdbContext>(options =>
+                services.AddDbContext<Furs2FeathersDbContext>(options =>
                     options.UseSqlServer(connection));
             }
 

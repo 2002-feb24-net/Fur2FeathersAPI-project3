@@ -13,9 +13,9 @@ namespace Furs2FeathersAPI.Controllers
     [ApiController]
     public class ClaimsController : ControllerBase
     {
-        private readonly f2fdbContext _context;
+        private readonly Furs2FeathersDbContext _context;
 
-        public ClaimsController(f2fdbContext context)
+        public ClaimsController(Furs2FeathersDbContext context)
         {
             _context = context;
         }

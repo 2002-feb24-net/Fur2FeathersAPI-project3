@@ -3,12 +3,12 @@ version: '3.7'
 services:
 
   web:
-    build: Furs2Feathers\Furs2FeathersAPI
-    image: jhbui1/fur-2-feathers-api:1.0
+    build: NotesService
+    image: nicholasescalona/2002-notes-api:1.0
     depends_on:
       - data
     ports:
-      - 8000:80
+      - 80:80
     networks:
       - default
     environment:
@@ -16,7 +16,9 @@ services:
       ConnectionStrings__NotesDbPostgreSqlDockerCompose: Host=data;Database=NotesDb;Username=postgres;Password=Pass@word
       EnsureDatabaseCreated: 'true'
       CorsOrigins__0: http://localhost:4200
-      CorsOrigins__1: https://2002-ng-notes-client.azurewebsites.net
+      CorsOrigins__1: http://192.168.99.100:4200
+      CorsOrigins__2: https://2002-ng-notes-client.azurewebsites.net
+      CorsOrigins__3: https://2002-ng-notes-client-docker.azurewebsites.net
       UseHttpsRedirection: 'false'
 
   data:

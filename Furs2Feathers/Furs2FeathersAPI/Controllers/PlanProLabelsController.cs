@@ -13,9 +13,9 @@ namespace Furs2FeathersAPI.Controllers
     [ApiController]
     public class PlanProLabelsController : ControllerBase
     {
-        private readonly f2fdbContext _context;
+        private readonly Furs2FeathersDbContext _context;
 
-        public PlanProLabelsController(f2fdbContext context)
+        public PlanProLabelsController(Furs2FeathersDbContext context)
         {
             _context = context;
         }
