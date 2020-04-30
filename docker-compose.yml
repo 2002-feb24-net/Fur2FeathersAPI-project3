@@ -11,8 +11,9 @@ version: '3.7'
 services:
 
   web:
-    build: Furs2Feathers\Furs2FeathersAPI
-    image: fur-2-feathers-api:1.0
+    build: Furs2Feathers
+    image: 2002-notes-api:1.0
+
     depends_on:
       - data
     ports:
@@ -20,8 +21,8 @@ services:
     networks:
       - default
     environment:
-      DatabaseConnection: NotesDbPostgreSqlDockerCompose
-      ConnectionStrings__NotesDbPostgreSqlDockerCompose: Host=data;Database=f2fdb;Username=postgres;Password=35122jhb
+      DatabaseConnection: f2fdbPostgreSqlDockerCompose
+      ConnectionStrings__f2fdbPostgreSqlDockerCompose: Host=data;Database=f2fdb;Username=postgres;Password=35122jhb
       EnsureDatabaseCreated: 'true'
       CorsOrigins__0: http://localhost:4200
       UseHttpsRedirection: 'false'
