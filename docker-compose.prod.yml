@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   web:
-    build: NotesService
+    build: Furs2Feathers\Furs2FeathersAPI
     image: jhbui1/fur-2-feathers-api:1.0
     depends_on:
       - data

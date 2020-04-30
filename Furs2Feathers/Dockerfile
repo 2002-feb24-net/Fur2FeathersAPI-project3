@@ -1,22 +1,20 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
+
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+COPY ./Furs2Feathers.sln ./
+COPY ["./Furs2FeathersAPI/*.csproj", "Furs2FeathersAPI/"]
+COPY ["./Furs2Feathers.DataAccess/*.csproj", "Furs2Feathers.DataAccess/"]
+COPY ["./Furs2Feathers.Domain/Furs2Feathers.Domain.csproj", "Furs2Feathers.Domain/"]
+RUN dotnet restore 
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
-WORKDIR /src
-COPY ["Furs2FeathersAPI/Furs2FeathersAPI.csproj", "Furs2FeathersAPI/"]
-RUN dotnet restore "Furs2FeathersAPI/Furs2FeathersAPI.csproj"
-COPY . .
-WORKDIR "/src/Furs2FeathersAPI"
-RUN dotnet build "Furs2FeathersAPI.csproj" -c Release -o /app/build
+COPY . ./
+RUN dotnet build Furs2FeathersAPI -c Release -o out
 
-FROM build AS publish
-RUN dotnet publish "Furs2FeathersAPI.csproj" -c Release -o /app/publish
-
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build-env /app/out .
+
 ENTRYPOINT ["dotnet", "Furs2FeathersAPI.dll"]
