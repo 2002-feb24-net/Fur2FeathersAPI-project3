@@ -13,6 +13,7 @@ services:
   web:
     build: Furs2Feathers
     image: 2002-notes-api:1.0
+
     depends_on:
       - data
     ports:
