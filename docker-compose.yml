@@ -11,7 +11,7 @@ version: '3.7'
 services:
 
   web:
-    build: Furs2Feathers\Furs2FeathersAPI
+    build: Furs2Feathers
     image: fur-2-feathers-api:1.0
     depends_on:
       - data
