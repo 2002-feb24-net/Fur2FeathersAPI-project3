@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 namespace Furs2Feathers.Domain.Interfaces
 {
     public interface IAddressRepository
-    {
-       /* EntityState State { get; set; }*/
-
+    { 
         void Add(Domain.Models.Address entity);
         void AddRange(IEnumerable<Domain.Models.Address> entities);
         bool Any(Expression<Func<Domain.Models.Address, bool>> predicate);
@@ -23,5 +21,6 @@ namespace Furs2Feathers.Domain.Interfaces
         Task<int> SaveChangesAsync();
         Task<IEnumerable<Domain.Models.Address>> ToListAsync();
         Task<bool> ModifyStateAsync(Domain.Models.Address address, int id);
+        Task<Domain.Models.Address> FindAsyncAsNoTracking(int id);
     }
 }

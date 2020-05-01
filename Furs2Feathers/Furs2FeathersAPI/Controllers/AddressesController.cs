@@ -87,7 +87,8 @@ namespace Furs2FeathersAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Furs2Feathers.Domain.Models.Address>> DeleteAddress(int id)
         {
-            var address = await addressRepo.FindAsync(id); // get this address matching this id
+            var address = await addressRepo.FindAsyncAsNoTracking(id); // get this address matching this id
+            // with tracking there are id errors even with just one row in the database so using AsNoTracking instead
             if (address == null)
             {
                 return NotFound();
