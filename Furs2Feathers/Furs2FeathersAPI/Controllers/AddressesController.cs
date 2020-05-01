@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Furs2Feathers.DataAccess.Models;
 using Furs2Feathers.Domain.Interfaces;
+using Furs2Feathers.DataAccess;
 
 namespace Furs2FeathersAPI.Controllers
 {
@@ -28,13 +29,19 @@ namespace Furs2FeathersAPI.Controllers
 
         // GET: api/Addresses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Furs2Feathers.Domain.Models.Address>>> GetAddress()
+        public async Task<ActionResult<IEnumerable<Address>>> GetAddress()
         {
             var list = await addressRepo.ToListAsync();
-            return Ok(list);
+            List<Address> mappedList = new List<Address>();
+            foreach (var item in list)
+            {
+                mappedList.Add(Mapper.MapAddress(item));
+            }
+            
+            return Ok(mappedList);
         }
 
-        // GET: api/Addresses/5
+        /*// GET: api/Addresses/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Furs2Feathers.Domain.Models.Address>> GetAddress(int id)
         {
@@ -48,7 +55,7 @@ namespace Furs2FeathersAPI.Controllers
             return Ok(address);
         }
 
-       /* // PUT: api/Addresses/5
+       *//* // PUT: api/Addresses/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
@@ -78,7 +85,7 @@ namespace Furs2FeathersAPI.Controllers
             }
 
             return NoContent();
-        }*/
+        }*//*
 
         // POST: api/Addresses
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
@@ -111,6 +118,6 @@ namespace Furs2FeathersAPI.Controllers
         private bool AddressExists(int id)
         {
             return addressRepo.Any(e => e.AddressId == id);
-        }
+        }*/
     }
 }
