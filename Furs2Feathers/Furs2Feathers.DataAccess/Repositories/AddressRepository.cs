@@ -23,7 +23,7 @@ namespace Furs2Feathers.DataAccess.Repositories
 */        public void Add(Domain.Models.Address entity)
         {
             var mappedEntity = Mapper.MapAddress(entity);
-            _context.Set<Models.Address>().Add(mappedEntity);
+            _context.Set<Address>().Add(mappedEntity);
         }
 
         public void AddRange(IEnumerable<Domain.Models.Address> entities)
@@ -36,7 +36,7 @@ namespace Furs2Feathers.DataAccess.Repositories
 
         public async Task<Domain.Models.Address> FindAsync(int id)
         {
-            var data = await _context.Set<Models.Address>().FindAsync(id);
+            var data = await _context.Set<Address>().FindAsync(id);
 
             return Mapper.MapAddress(data);
         }
@@ -46,9 +46,16 @@ namespace Furs2Feathers.DataAccess.Repositories
             return _context.Set<Domain.Models.Address>().Where(predicate);
         }
 
+        public async Task<Domain.Models.Address> FindAsyncAsNoTracking(int id)
+        {
+            var data = await _context.Set<Address>().AsNoTracking().Where(a => a.AddressId == id).FirstOrDefaultAsync();
+
+            return Mapper.MapAddress(data);
+        }
+
         public async Task<Domain.Models.Address> GetAsync(int id)
         {
-            var entity = await _context.Set<Models.Address>().FindAsync(id); //return single object of class
+            var entity = await _context.Set<Address>().FindAsync(id); //return single object of class
 
             return Mapper.MapAddress(entity);
 
@@ -56,7 +63,7 @@ namespace Furs2Feathers.DataAccess.Repositories
 
         public async Task<IEnumerable<Domain.Models.Address>> GetAll()
         {
-            var entities = await _context.Set<Models.Address>().ToListAsync();
+            var entities = await _context.Set<Address>().ToListAsync();
             var mappedEntities = new List<Domain.Models.Address>();
             foreach (var entity in entities)
             {
