@@ -5,7 +5,7 @@ namespace Furs2Feathers.DataAccess.Models
 {
     public partial class f2fdbContext : DbContext
     {
-
+        
 
         public f2fdbContext(DbContextOptions<f2fdbContext> options)
             : base(options)
