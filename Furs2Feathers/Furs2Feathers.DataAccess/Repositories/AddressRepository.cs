@@ -83,7 +83,7 @@ namespace Furs2Feathers.DataAccess.Repositories
         public void Remove(Domain.Models.Address entity)
         {
             var mappedEntity = Mapper.MapAddress(entity);
-            _context.Set<Models.Address>().Remove(mappedEntity);
+            _context.Set<Address>().Remove(mappedEntity);
         }
 
         public void RemoveRange(IEnumerable<Domain.Models.Address> entities)
@@ -106,6 +106,37 @@ namespace Furs2Feathers.DataAccess.Repositories
         }
 
         // need to implement a put method but it requires indepth knowledge of how entity state works
+
+        public async Task<bool> ModifyStateAsync(Domain.Models.Address address, int id)
+        {
+            var mappedAddress = Mapper.MapAddress(address);
+            /*_context.Entry(address).State = EntityState.Modified;*/
+            _context.Entry(mappedAddress).State = EntityState.Modified;
+
+            try
+            {
+                await SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AddressExists(id))
+                {
+                    return false;
+                    // address not found
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return true;
+            // it worked, so return true
+        }
+
+        private bool AddressExists(int id)
+        {
+            return Any(e => e.AddressId == id);
+        }
 
         public void Save()
         {

@@ -22,5 +22,6 @@ namespace Furs2Feathers.Domain.Interfaces
         void Save();
         Task<int> SaveChangesAsync();
         Task<IEnumerable<Domain.Models.Address>> ToListAsync();
+        Task<bool> ModifyStateAsync(Domain.Models.Address address, int id);
     }
 }
