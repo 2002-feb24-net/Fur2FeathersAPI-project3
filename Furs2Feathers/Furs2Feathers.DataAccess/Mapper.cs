@@ -32,8 +32,7 @@ namespace Furs2Feathers.DataAccess
                 ClaimId = claims.ClaimId,
                 PolicyId = claims.PolicyId,
                 Description = claims.Description,
-                FilingDate = claims.FilingDate,
-                Policy = MapPolicies(claims.Policy)
+                FilingDate = claims.FilingDate
             };
         }
 
@@ -77,10 +76,7 @@ namespace Furs2Feathers.DataAccess
                 EmpId = invoice.EmpId,
                 PetId = invoice.PetId,
                 Notes = invoice.Notes,
-                Cost = invoice.Cost,
-                Customer = MapCustomer(invoice.Customer),
-                Emp = MapEmployee(invoice.Emp),
-                Pet = MapPet(invoice.Pet)
+                Cost = invoice.Cost
             };
         }
 
@@ -116,8 +112,7 @@ namespace Furs2Feathers.DataAccess
             {
                 PlanId = planProLabels.PlanId,
                 PlanProLabelsId = planProLabels.PlanProLabelsId,
-                Labels = planProLabels.Labels,
-                Plan = MapPlan(planProLabels.Plan)
+                Labels = planProLabels.Labels
             };
         }
 
@@ -127,8 +122,7 @@ namespace Furs2Feathers.DataAccess
             {
                 PlanReviewId = planReviews.PlanReviewId,
                 CustomerId = planReviews.CustomerId,
-                Review = planReviews.Review,
-                Customer = MapCustomer(planReviews.Customer)
+                Review = planReviews.Review
             };
         }
 
@@ -143,10 +137,7 @@ namespace Furs2Feathers.DataAccess
                 PetId = policies.PetId,
                 Premium = policies.Premium,
                 RenewalDate = policies.RenewalDate,
-                Emp = MapEmployee(policies.Emp),
-                Pet = MapPet(policies.Pet),
                 Claims = policies.Claims.Select(MapClaims).ToList(),
-                Customer = policies.Customer.Select(MapCustomer).ToList()
             };
         }
         ///-------------------------------------------------------------------------------------------------------------------
@@ -174,8 +165,7 @@ namespace Furs2Feathers.DataAccess
                 ClaimId = claims.ClaimId,
                 PolicyId = claims.PolicyId,
                 Description = claims.Description,
-                FilingDate = claims.FilingDate,
-                Policy = MapPolicies(claims.Policy)
+                FilingDate = claims.FilingDate
             };
         }
 
@@ -219,10 +209,7 @@ namespace Furs2Feathers.DataAccess
                 EmpId = invoice.EmpId,
                 PetId = invoice.PetId,
                 Notes = invoice.Notes,
-                Cost = invoice.Cost,
-                Customer = MapCustomer(invoice.Customer),
-                Emp = MapEmployee(invoice.Emp),
-                Pet = MapPet(invoice.Pet)
+                Cost = invoice.Cost
             };
         }
 
@@ -258,8 +245,7 @@ namespace Furs2Feathers.DataAccess
             {
                 PlanId = planProLabels.PlanId,
                 PlanProLabelsId = planProLabels.PlanProLabelsId,
-                Labels = planProLabels.Labels,
-                Plan = MapPlan(planProLabels.Plan)
+                Labels = planProLabels.Labels
             };
         }
 
@@ -269,8 +255,7 @@ namespace Furs2Feathers.DataAccess
             {
                 PlanReviewId = planReviews.PlanReviewId,
                 CustomerId = planReviews.CustomerId,
-                Review = planReviews.Review,
-                Customer = MapCustomer(planReviews.Customer)
+                Review = planReviews.Review
             };
         }
 
@@ -285,10 +270,7 @@ namespace Furs2Feathers.DataAccess
                 PetId = policies.PetId,
                 Premium = policies.Premium,
                 RenewalDate = policies.RenewalDate,
-                Emp = MapEmployee(policies.Emp),
-                Pet = MapPet(policies.Pet),
-                Claims = policies.Claims.Select(MapClaims).ToList(),
-                Customer = policies.Customer.Select(MapCustomer).ToList()
+                Claims = policies.Claims.Select(MapClaims).ToList()
             };
         }
     }
