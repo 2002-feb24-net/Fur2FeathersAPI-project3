@@ -88,7 +88,7 @@ namespace Furs2FeathersAPI
             });
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Furs2Feathers API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Fur2Feathers API", Version = "v1" });
             })
             ;
         }
@@ -116,7 +116,7 @@ namespace Furs2FeathersAPI
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Notes API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Fur2Feathers API");
             });
 
             app.UseEndpoints(endpoints =>
