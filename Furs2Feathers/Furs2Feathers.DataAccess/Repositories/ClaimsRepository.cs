@@ -12,7 +12,7 @@ namespace Furs2Feathers.DataAccess.Repositories
     /// <summary>
     /// This class wraps calls to EF Core's methods to ensure separation of concerns. A domain class making calls to this repository does not have to worry about EntityFramework Core being used. This class can later be modified to make calls to some other version of EF Core or another ORM (Object Relational Mapper). This class wraps CRUD calls to a database using EF Core.
     /// </summary>
-    public class AddressRepository : IAddressRepository
+    public class ClaimsRepository : IClaimsRepository
     {
         private readonly f2fdbContext _context;
 
@@ -20,34 +20,34 @@ namespace Furs2Feathers.DataAccess.Repositories
         /// This class uses depedency injection in order to avoid sync errors with multiple repositories being called at the same time
         /// </summary>
         /// <param name="context"></param>
-        public AddressRepository(f2fdbContext context)
+        public ClaimsRepository(f2fdbContext context)
         {
             _context = context;
         }
 
-     /// <summary>
-        /// Wraps a call to EntityFramework Core Add. The call is made with a mapped entity (DataAccess.Models.Address) instead of the domain model passed as a parameter. The DataAccess.Model is used to communicate with EF Core.
+        /// <summary>
+        /// Wraps a call to EntityFramework Core Add. The call is made with a mapped entity (DataAccess.Models.Claims) instead of the domain model passed as a parameter. The DataAccess.Model is used to communicate with EF Core.
         /// 
         /// EF Core Add:
         /// Finds an entity with the given primary key values. If an entity with the given primary key values is being tracked by the context, then it is returned immediately without making a request to the database. Otherwise, a query is made to the database for an entity with the given primary key values and this entity, if found, is attached to the context and returned. If no entity is found, then null is returned.
         /// </summary>
         /// <param name="entity"></param>
-        /// <returns>Domain.Models.Address</returns>
-       public void Add(Domain.Models.Address entity)
+        /// <returns>Domain.Models.Claims</returns>
+        public void Add(Domain.Models.Claims entity)
         {
-            var mappedEntity = Mapper.MapAddress(entity);
-            _context.Set<Address>().Add(mappedEntity);
+            var mappedEntity = Mapper.MapClaims(entity);
+            _context.Set<Claims>().Add(mappedEntity);
         }
 
         /// <summary>
-        /// Wraps a call to EntityFramework Core Add. The list is added one by one through an iteration over an IEnumerable. The call is made with a mapped entity (DataAccess.Models.Address) instead of the domain model passed as a parameter. The DataAccess.Model is used to communicate with EF Core.
+        /// Wraps a call to EntityFramework Core Add. The list is added one by one through an iteration over an IEnumerable. The call is made with a mapped entity (DataAccess.Models.Claims) instead of the domain model passed as a parameter. The DataAccess.Model is used to communicate with EF Core.
         /// 
         /// EF Core Add:
         /// Finds an entity with the given primary key values. If an entity with the given primary key values is being tracked by the context, then it is returned immediately without making a request to the database. Otherwise, a query is made to the database for an entity with the given primary key values and this entity, if found, is attached to the context and returned. If no entity is found, then null is returned.
         /// </summary>
         /// <param name="entity"></param>
-        /// <returns>Domain.Models.Address</returns>
-        public void AddRange(IEnumerable<Domain.Models.Address> entities)
+        /// <returns>Domain.Models.Claims</returns>
+        public void AddRange(IEnumerable<Domain.Models.Claims> entities)
         {
             foreach (var entity in entities)
             {
@@ -61,12 +61,12 @@ namespace Furs2Feathers.DataAccess.Repositories
         /// Finds an entity with the given primary key values. If an entity with the given primary key values is being tracked by the context, then it is returned immediately without making a request to the database. Otherwise, a query is made to the database for an entity with the given primary key values and this entity, if found, is attached to the context and returned. If no entity is found, then null is returned.
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>Domain.Models.Address</returns>
-        public async Task<Domain.Models.Address> FindAsync(int id)
+        /// <returns>Domain.Models.Claims</returns>
+        public async Task<Domain.Models.Claims> FindAsync(int id)
         {
-            var data = await _context.Set<Address>().FindAsync(id);
+            var data = await _context.Set<Claims>().FindAsync(id);
 
-            return Mapper.MapAddress(data);
+            return Mapper.MapClaims(data);
         }
 
         /// <summary>
@@ -76,10 +76,10 @@ namespace Furs2Feathers.DataAccess.Repositories
         /// Finds an entity with the given primary key values. If an entity with the given primary key values is being tracked by the context, then it is returned immediately without making a request to the database. Otherwise, a query is made to the database for an entity with the given primary key values and this entity, if found, is attached to the context and returned. If no entity is found, then null is returned.
         /// </summary>
         /// <param name="predicate"></param>
-        /// <returns>Domain.Models.Address</returns>
-        public IEnumerable<Domain.Models.Address> FindAsync(Expression<Func<Domain.Models.Address, bool>> predicate)
+        /// <returns>Domain.Models.Claims</returns>
+        public IEnumerable<Domain.Models.Claims> FindAsync(Expression<Func<Domain.Models.Claims, bool>> predicate)
         {
-            return _context.Set<Domain.Models.Address>().Where(predicate);
+            return _context.Set<Domain.Models.Claims>().Where(predicate);
         }
 
         /// <summary>
@@ -89,12 +89,12 @@ namespace Furs2Feathers.DataAccess.Repositories
         /// Finds an entity with the given primary key values. If an entity with the given primary key values is being tracked by the context, then it is returned immediately without making a request to the database. Otherwise, a query is made to the database for an entity with the given primary key values and this entity, if found, is attached to the context and returned. If no entity is found, then null is returned.
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>Domain.Models.Address</returns>
-        public async Task<Domain.Models.Address> FindAsyncAsNoTracking(int id)
+        /// <returns>Domain.Models.Claims</returns>
+        public async Task<Domain.Models.Claims> FindAsyncAsNoTracking(int id)
         {
-            var data = await _context.Set<Address>().AsNoTracking().Where(a => a.AddressId == id).FirstOrDefaultAsync();
+            var data = await _context.Set<Claims>().AsNoTracking().Where(a => a.ClaimId == id).FirstOrDefaultAsync();
 
-            return Mapper.MapAddress(data);
+            return Mapper.MapClaims(data);
         }
 
         /// <summary>
@@ -104,12 +104,12 @@ namespace Furs2Feathers.DataAccess.Repositories
         /// Finds an entity with the given primary key values. If an entity with the given primary key values is being tracked by the context, then it is returned immediately without making a request to the database. Otherwise, a query is made to the database for an entity with the given primary key values and this entity, if found, is attached to the context and returned. If no entity is found, then null is returned.
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>Domain.Models.Address</returns>
-        public async Task<Domain.Models.Address> GetAsync(int id)
+        /// <returns>Domain.Models.Claims</returns>
+        public async Task<Domain.Models.Claims> GetAsync(int id)
         {
-            var entity = await _context.Set<Address>().FindAsync(id); //return single object of class
+            var entity = await _context.Set<Claims>().FindAsync(id); //return single object of class
 
-            return Mapper.MapAddress(entity);
+            return Mapper.MapClaims(entity);
 
         }
 
@@ -119,14 +119,14 @@ namespace Furs2Feathers.DataAccess.Repositories
         /// EF Core FindAsync:
         /// Finds an entity with the given primary key values. If an entity with the given primary key values is being tracked by the context, then it is returned immediately without making a request to the database. Otherwise, a query is made to the database for an entity with the given primary key values and this entity, if found, is attached to the context and returned. If no entity is found, then null is returned.
         /// </summary>
-        /// <returns>Domain.Models.Address</returns>
-        public async Task<IEnumerable<Domain.Models.Address>> GetAll()
+        /// <returns>Domain.Models.Claims</returns>
+        public async Task<IEnumerable<Domain.Models.Claims>> GetAll()
         {
-            var entities = await _context.Set<Address>().ToListAsync();
-            var mappedEntities = new List<Domain.Models.Address>();
+            var entities = await _context.Set<Claims>().ToListAsync();
+            var mappedEntities = new List<Domain.Models.Claims>();
             foreach (var entity in entities)
             {
-                mappedEntities.Add(Mapper.MapAddress(entity));
+                mappedEntities.Add(Mapper.MapClaims(entity));
             }
             return mappedEntities;
 
@@ -138,8 +138,8 @@ namespace Furs2Feathers.DataAccess.Repositories
         /// EF Core FindAsync:
         /// Finds an entity with the given primary key values. If an entity with the given primary key values is being tracked by the context, then it is returned immediately without making a request to the database. Otherwise, a query is made to the database for an entity with the given primary key values and this entity, if found, is attached to the context and returned. If no entity is found, then null is returned.
         /// </summary>
-        /// <returns>Domain.Models.Address</returns>
-        public async Task<IEnumerable<Domain.Models.Address>> ToListAsync()
+        /// <returns>Domain.Models.Claims</returns>
+        public async Task<IEnumerable<Domain.Models.Claims>> ToListAsync()
         {
             return await GetAll();
         }
@@ -151,11 +151,11 @@ namespace Furs2Feathers.DataAccess.Repositories
         /// Begins tracking the given entity in the Deleted state such that it will be removed from the database when SaveChanges() is called.
         /// </summary>
         /// <param name="entity"></param>
-        /// <returns>Domain.Models.Address</returns>
-        public void Remove(Domain.Models.Address entity)
+        /// <returns>Domain.Models.Claims</returns>
+        public void Remove(Domain.Models.Claims entity)
         {
-            var mappedEntity = Mapper.MapAddress(entity);
-            _context.Set<Address>().Remove(mappedEntity);
+            var mappedEntity = Mapper.MapClaims(entity);
+            _context.Set<Claims>().Remove(mappedEntity);
         }
 
         /// <summary>
@@ -165,8 +165,8 @@ namespace Furs2Feathers.DataAccess.Repositories
         /// Begins tracking the given entity in the Deleted state such that it will be removed from the database when SaveChanges() is called.
         /// </summary>
         /// <param name="entity"></param>
-        /// <returns>Domain.Models.Address</returns>
-        public void RemoveRange(IEnumerable<Domain.Models.Address> entities)
+        /// <returns>Domain.Models.Claims</returns>
+        public void RemoveRange(IEnumerable<Domain.Models.Claims> entities)
         {
             foreach (var entity in entities)
             {
@@ -181,8 +181,8 @@ namespace Furs2Feathers.DataAccess.Repositories
         /// Finds an entity with the given primary key values. If an entity with the given primary key values is being tracked by the context, then it is returned immediately without making a request to the database. Otherwise, a query is made to the database for an entity with the given primary key values and this entity, if found, is attached to the context and returned. If no entity is found, then null is returned.
         /// </summary>
         /// <param name="entity"></param>
-        /// <returns>Domain.Models.Address</returns>
-        public bool Any(Expression<Func<Domain.Models.Address, bool>> predicate)
+        /// <returns>Domain.Models.Claims</returns>
+        public bool Any(Expression<Func<Domain.Models.Claims, bool>> predicate)
         {
             var entity = FindAsync(predicate);
             if (entity == null)
@@ -199,9 +199,9 @@ namespace Furs2Feathers.DataAccess.Repositories
         /// <param name="address"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<bool> ModifyStateAsync(Domain.Models.Address address, int id)
+        public async Task<bool> ModifyStateAsync(Domain.Models.Claims address, int id)
         {
-            var mappedAddress = Mapper.MapAddress(address);
+            var mappedAddress = Mapper.MapClaims(address);
             /*_context.Entry(address).State = EntityState.Modified;*/
             _context.Entry(mappedAddress).State = EntityState.Modified;
 
@@ -211,7 +211,7 @@ namespace Furs2Feathers.DataAccess.Repositories
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AddressExists(id))
+                if (!ClaimExists(id))
                 {
                     return false;
                     // address not found
@@ -232,10 +232,10 @@ namespace Furs2Feathers.DataAccess.Repositories
         /// Asynchronously determines whether a sequence contains any elements matching the predicate conditions.
         /// </summary>
         /// <param name="entity"></param>
-        /// <returns>Domain.Models.Address</returns>
-        private bool AddressExists(int id)
+        /// <returns>Domain.Models.Claims</returns>
+        private bool ClaimExists(int id)
         {
-            return Any(e => e.AddressId == id);
+            return Any(e => e.ClaimId == id);
         }
 
         /// <summary>
@@ -261,7 +261,7 @@ namespace Furs2Feathers.DataAccess.Repositories
             return await _context.SaveChangesAsync();
         }
 
-        
+
     }
 
 }

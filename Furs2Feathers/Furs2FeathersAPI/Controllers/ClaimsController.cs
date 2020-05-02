@@ -4,8 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Furs2Feathers.DataAccess.Models;
+using Furs2Feathers.Domain.Interfaces;
 
 namespace Furs2FeathersAPI.Controllers
 {
@@ -13,111 +12,89 @@ namespace Furs2FeathersAPI.Controllers
     [ApiController]
     public class ClaimsController : ControllerBase
     {
-        private readonly f2fdbContext _context;
+        private readonly IClaimsRepository claimsRepo;
 
-        public ClaimsController(f2fdbContext context)
+
+        public ClaimsController(IClaimsRepository claimsRepository)
         {
-            _context = context;
+            claimsRepo = claimsRepository;
         }
 
         // GET: api/Claims
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Claims>>> GetClaims()
+        public async Task<ActionResult<IEnumerable<Furs2Feathers.Domain.Models.Claims>>> GetClaim()
         {
-            return await _context.Claims.ToListAsync();
+            var list = await claimsRepo.ToListAsync();
+
+
+            return Ok(list);
         }
 
         // GET: api/Claims/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Claims>> GetClaims(int id)
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Claims>> GetClaim(int id)
         {
-            var claims = await _context.Claims.FindAsync(id);
+            var claims = await claimsRepo.FindAsync(id);
 
             if (claims == null)
             {
                 return NotFound();
             }
 
-            return claims;
+            return Ok(claims);
         }
 
         // PUT: api/Claims/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutClaims(int id, Claims claims)
+        public async Task<IActionResult> PutAddress(int id, Furs2Feathers.Domain.Models.Claims claims)
         {
             if (id != claims.ClaimId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(claims).State = EntityState.Modified;
-
-            try
+            /*_context.Entry(claims).State = EntityState.Modified;*/
+            if (!await claimsRepo.ModifyStateAsync(claims, id))
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
+                // if false, then modifying state failed
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!ClaimsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NoContent();
+                // successful put
             }
-
-            return NoContent();
         }
 
         // POST: api/Claims
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Claims>> PostClaims(Claims claims)
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Claims>> PostAddress(Furs2Feathers.Domain.Models.Claims claims)
         {
-            _context.Claims.Add(claims);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (ClaimsExists(claims.ClaimId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            claimsRepo.Add(claims);
+            await claimsRepo.SaveChangesAsync();
 
-            return CreatedAtAction("GetClaims", new { id = claims.ClaimId }, claims);
+            return CreatedAtAction("GetClaim", new { id = claims.ClaimId }, claims);
         }
 
         // DELETE: api/Claims/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Claims>> DeleteClaims(int id)
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Claims>> DeleteAddress(int id)
         {
-            var claims = await _context.Claims.FindAsync(id);
+            var claims = await claimsRepo.FindAsyncAsNoTracking(id); // get this claims matching this id
+            // with tracking there are id errors even with just one row in the database so using AsNoTracking instead
             if (claims == null)
             {
                 return NotFound();
             }
 
-            _context.Claims.Remove(claims);
-            await _context.SaveChangesAsync();
+            claimsRepo.Remove(claims);
+            await claimsRepo.SaveChangesAsync();
 
-            return claims;
-        }
-
-        private bool ClaimsExists(int id)
-        {
-            return _context.Claims.Any(e => e.ClaimId == id);
+            return NoContent();
         }
     }
 }
