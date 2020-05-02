@@ -4,8 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Furs2Feathers.DataAccess.Models;
+using Furs2Feathers.Domain.Interfaces;
 
 namespace Furs2FeathersAPI.Controllers
 {
@@ -13,17 +12,17 @@ namespace Furs2FeathersAPI.Controllers
     [ApiController]
     public class ClaimsController : ControllerBase
     {
-        private readonly IAddressRepository claimsRepo;
+        private readonly IClaimsRepository claimsRepo;
 
 
-        public AddressesController(IAddressRepository claimsRepository)
+        public ClaimsController(IClaimsRepository claimsRepository)
         {
             claimsRepo = claimsRepository;
         }
 
         // GET: api/Claims
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Furs2Feathers.Domain.Models.Address>>> GetAddress()
+        public async Task<ActionResult<IEnumerable<Furs2Feathers.Domain.Models.Claims>>> GetClaim()
         {
             var list = await claimsRepo.ToListAsync();
 
@@ -33,31 +32,31 @@ namespace Furs2FeathersAPI.Controllers
 
         // GET: api/Claims/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Furs2Feathers.Domain.Models.Address>> GetAddress(int id)
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Claims>> GetClaim(int id)
         {
-            var address = await claimsRepo.FindAsync(id);
+            var claims = await claimsRepo.FindAsync(id);
 
-            if (address == null)
+            if (claims == null)
             {
                 return NotFound();
             }
 
-            return Ok(address);
+            return Ok(claims);
         }
 
         // PUT: api/Claims/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAddress(int id, Furs2Feathers.Domain.Models.Address address)
+        public async Task<IActionResult> PutAddress(int id, Furs2Feathers.Domain.Models.Claims claims)
         {
-            if (id != address.AddressId)
+            if (id != claims.ClaimId)
             {
                 return BadRequest();
             }
 
-            /*_context.Entry(address).State = EntityState.Modified;*/
-            if (!await claimsRepo.ModifyStateAsync(address, id))
+            /*_context.Entry(claims).State = EntityState.Modified;*/
+            if (!await claimsRepo.ModifyStateAsync(claims, id))
             {
                 return NotFound();
                 // if false, then modifying state failed
@@ -73,34 +72,29 @@ namespace Furs2FeathersAPI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Furs2Feathers.Domain.Models.Address>> PostAddress(Furs2Feathers.Domain.Models.Address address)
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Claims>> PostAddress(Furs2Feathers.Domain.Models.Claims claims)
         {
-            claimsRepo.Add(address);
+            claimsRepo.Add(claims);
             await claimsRepo.SaveChangesAsync();
 
-            return CreatedAtAction("GetAddress", new { id = address.AddressId }, address);
+            return CreatedAtAction("GetClaim", new { id = claims.ClaimId }, claims);
         }
 
         // DELETE: api/Claims/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Furs2Feathers.Domain.Models.Address>> DeleteAddress(int id)
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Claims>> DeleteAddress(int id)
         {
-            var address = await claimsRepo.FindAsyncAsNoTracking(id); // get this address matching this id
+            var claims = await claimsRepo.FindAsyncAsNoTracking(id); // get this claims matching this id
             // with tracking there are id errors even with just one row in the database so using AsNoTracking instead
-            if (address == null)
+            if (claims == null)
             {
                 return NotFound();
             }
 
-            claimsRepo.Remove(address);
+            claimsRepo.Remove(claims);
             await claimsRepo.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool AddressExists(int id)
-        {
-            return claimsRepo.Any(e => e.AddressId == id);
         }
     }
 }

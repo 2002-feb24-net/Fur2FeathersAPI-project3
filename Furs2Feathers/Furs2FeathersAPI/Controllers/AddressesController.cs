@@ -99,10 +99,5 @@ namespace Furs2FeathersAPI.Controllers
 
             return NoContent();
         }
-
-        private bool AddressExists(int id)
-        {
-            return addressRepo.Any(e => e.AddressId == id);
-        }
     }
 }
