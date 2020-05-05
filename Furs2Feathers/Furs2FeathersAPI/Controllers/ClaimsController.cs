@@ -22,7 +22,7 @@ namespace Furs2FeathersAPI.Controllers
 
         // GET: api/Claims
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Furs2Feathers.Domain.Models.Claims>>> GetClaim()
+        public async Task<ActionResult<IEnumerable<Furs2Feathers.Domain.Models.Claims>>> GetClaims()
         {
             var list = await claimsRepo.ToListAsync();
 
@@ -48,7 +48,7 @@ namespace Furs2FeathersAPI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAddress(int id, Furs2Feathers.Domain.Models.Claims claims)
+        public async Task<IActionResult> PutClaim(int id, Furs2Feathers.Domain.Models.Claims claims)
         {
             if (id != claims.ClaimId)
             {
@@ -72,7 +72,7 @@ namespace Furs2FeathersAPI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Furs2Feathers.Domain.Models.Claims>> PostAddress(Furs2Feathers.Domain.Models.Claims claims)
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Claims>> PostClaim(Furs2Feathers.Domain.Models.Claims claims)
         {
             claimsRepo.Add(claims);
             await claimsRepo.SaveChangesAsync();
@@ -82,7 +82,7 @@ namespace Furs2FeathersAPI.Controllers
 
         // DELETE: api/Claims/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Furs2Feathers.Domain.Models.Claims>> DeleteAddress(int id)
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Claims>> DeleteClaim(int id)
         {
             var claims = await claimsRepo.FindAsyncAsNoTracking(id); // get this claims matching this id
             // with tracking there are id errors even with just one row in the database so using AsNoTracking instead

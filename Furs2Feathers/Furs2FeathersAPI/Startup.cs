@@ -66,6 +66,7 @@ namespace Furs2FeathersAPI
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IClaimsRepository, ClaimsRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
 
             // support switching between database providers using runtime configuration
