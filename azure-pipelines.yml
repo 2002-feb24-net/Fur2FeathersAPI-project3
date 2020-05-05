@@ -89,7 +89,7 @@ stages:
             inputs:
               containerregistrytype: 'Container Registry'
               dockerRegistryEndpoint: 'jhbui1'
-              dockerComposeFile: '**/docker-compose.prod.yml'
+              dockerComposeFile: './docker-compose.prod.yml'
               action: 'Build services'
             displayName: docker build
 
