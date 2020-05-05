@@ -7,9 +7,23 @@ services:
       context: furs2feathers
       dockerfile: api.Dockerfile
     image: jhbui1/f2f-api:1.0
+    environment:
+      DatabaseConnection: f2fdbPostgreSqlDockerCompose
+      ConnectionStrings__f2fdbPostgreSqlDockerCompose: Host=data;Database=f2fdb;Username=postgres;Password=35122jhb
+      CorsOrigins__0: http://localhost:4200
+      CorsOrigins__1: http://fur2feathers.azurewebsites.net/home
+      CorsOrigins__2: https://fur2feathers.azurewebsites.net/home
+      CorsOrigins__3: http://fur2feathers-docker.azurewebsites.net/home
+      CorsOrigins__4: https://fur2feathers-docker.azurewebsites.net/home
+
+      UseHttpsRedirection: 'false'
 
   data:
     build:
       context: furs2feathers
       dockerfile: db.Dockerfile
     image: jhbui1/f2f-db:1.0
+    environment: 
+      POSTGRES_PASSWORD: Pass@word
+  
+    
