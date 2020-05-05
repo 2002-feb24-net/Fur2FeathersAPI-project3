@@ -5,9 +5,7 @@ namespace Furs2Feathers.DataAccess.Models
 {
     public partial class f2fdbContext : DbContext
     {
-        public f2fdbContext()
-        {
-        }
+        
 
         public f2fdbContext(DbContextOptions<f2fdbContext> options)
             : base(options)
@@ -25,14 +23,14 @@ namespace Furs2Feathers.DataAccess.Models
         public virtual DbSet<PlanReviews> PlanReviews { get; set; }
         public virtual DbSet<Policies> Policies { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseNpgsql("Host=localhost;Database=f2fdb;Username=postgres;Password=35122jhb");
-            }
-        }
+        /*  protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+          {
+              if (!optionsBuilder.IsConfigured)
+              {
+  #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                  optionsBuilder.UseNpgsql("Host=localhost;Database=f2fdb;Username=postgres;Password=35122jhb");
+              }
+          }*/
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -353,9 +351,11 @@ namespace Furs2Feathers.DataAccess.Models
                     .HasConstraintName("policy_pet");
             });
 
-            OnModelCreatingPartial(modelBuilder);
-        }
+            /*OnModelCreatingPartial(modelBuilder);*/
 
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+            /*        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+            */
+        }
     }
 }

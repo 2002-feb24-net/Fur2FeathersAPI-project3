@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Furs2Feathers.DataAccess.Models;
+using Furs2Feathers.DataAccess.Repositories;
+using Furs2Feathers.Domain.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -59,12 +61,10 @@ namespace Furs2FeathersAPI
                     options.UseSqlServer(connection));
             }
 
-           /* services.AddScoped<INoteRepository, NoteRepository>();*/
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Notes API", Version = "v1" });
-            });
+            services.AddScoped<IAddressRepository, AddressRepository>();
+            services.AddScoped<IClaimsRepository, ClaimsRepository>();
+
 
             // support switching between database providers using runtime configuration
 
@@ -87,6 +87,11 @@ namespace Furs2FeathersAPI
                 options.ReturnHttpNotAcceptable = true;
                 options.SuppressAsyncSuffixInActionNames = false;
             });
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Fur2Feathers API", Version = "v1" });
+            })
+            ;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -112,7 +117,7 @@ namespace Furs2FeathersAPI
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Notes API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Fur2Feathers API");
             });
 
             app.UseEndpoints(endpoints =>

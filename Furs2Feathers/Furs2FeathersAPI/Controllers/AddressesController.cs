@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Furs2Feathers.DataAccess.Models;
+/*using Microsoft.EntityFrameworkCore;
+using Furs2Feathers.DataAccess.Models;*/
+using Furs2Feathers.Domain.Interfaces;
+/*using Furs2Feathers.DataAccess;*/
 
 namespace Furs2FeathersAPI.Controllers
 {
@@ -13,111 +15,109 @@ namespace Furs2FeathersAPI.Controllers
     [ApiController]
     public class AddressesController : ControllerBase
     {
-        private readonly f2fdbContext _context;
+        /// <summary>
+        /// Private field. Initialized with the AddressRepository and then has a constant reference (the field is readonly)
+        /// </summary>
+        private readonly IAddressRepository addressRepo;
 
-        public AddressesController(f2fdbContext context)
+        /// <summary>
+        /// AddressController. Manages address calls to the database. Uses a wrapper for entity framework (AddressRepository). Dependency injection of the AddressRepository is done through startup.cs
+        /// </summary>
+        /// <param name="addressRepository"></param>
+        public AddressesController(IAddressRepository addressRepository)
         {
-            _context = context;
+            addressRepo = addressRepository;
         }
 
         // GET: api/Addresses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Address>>> GetAddress()
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Address), StatusCodes.Status200OK)] // successful get request
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        public async Task<ActionResult<IEnumerable<Furs2Feathers.Domain.Models.Address>>> GetAddress()
         {
-            return await _context.Address.ToListAsync();
+            var list = await addressRepo.ToListAsync();
+            
+
+            return Ok(list);
         }
 
         // GET: api/Addresses/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Address>> GetAddress(int id)
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Address), StatusCodes.Status200OK)] // successful get request
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Address>> GetAddress(int id)
         {
-            var address = await _context.Address.FindAsync(id);
+            var address = await addressRepo.FindAsync(id);
 
             if (address == null)
             {
                 return NotFound();
             }
 
-            return address;
+            return Ok(address);
         }
 
         // PUT: api/Addresses/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAddress(int id, Address address)
+        [ProducesResponseType(StatusCodes.Status204NoContent)] // success, nothing returned (works as intended, request fulfilled)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // from an update failing due to user error (id does not match any existing resource/database id for the entity)
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // if something unexpectedly went wrong with the database or http request/response
+        public async Task<IActionResult> PutAddress(int id, Furs2Feathers.Domain.Models.Address address)
         {
             if (id != address.AddressId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(address).State = EntityState.Modified;
-
-            try
+            /*_context.Entry(address).State = EntityState.Modified;*/
+            if (! await addressRepo.ModifyStateAsync(address, id))
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
+                // if false, then modifying state failed
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!AddressExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NoContent();
+                // successful put
             }
-
-            return NoContent();
         }
 
         // POST: api/Addresses
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Address>> PostAddress(Address address)
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Address), StatusCodes.Status201Created)] // successful post and returns created object
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Address>> PostAddress(Furs2Feathers.Domain.Models.Address address)
         {
-            _context.Address.Add(address);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (AddressExists(address.AddressId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            addressRepo.Add(address);
+            await addressRepo.SaveChangesAsync();
 
             return CreatedAtAction("GetAddress", new { id = address.AddressId }, address);
         }
 
         // DELETE: api/Addresses/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Address>> DeleteAddress(int id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)] // success, nothing returned (works as intended, request fulfilled)
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Address>> DeleteAddress(int id)
         {
-            var address = await _context.Address.FindAsync(id);
+            var address = await addressRepo.FindAsyncAsNoTracking(id); // get this address matching this id
+            // with tracking there are id errors even with just one row in the database so using AsNoTracking instead
             if (address == null)
             {
                 return NotFound();
             }
 
-            _context.Address.Remove(address);
-            await _context.SaveChangesAsync();
+            addressRepo.Remove(address);
+            await addressRepo.SaveChangesAsync();
 
-            return address;
-        }
-
-        private bool AddressExists(int id)
-        {
-            return _context.Address.Any(e => e.AddressId == id);
+            return NoContent();
         }
     }
 }
