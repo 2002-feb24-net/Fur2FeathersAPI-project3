@@ -15,12 +15,12 @@ namespace Furs2FeathersAPI.Controllers
     public class CustomersController : ControllerBase
     {
         /// <summary>
-        /// Private field. Initialized with the AddressRepository and then has a constant reference (the field is readonly)
+        /// Private field. Initialized with the CustomerRepository and then has a constant reference (the field is readonly)
         /// </summary>
         private readonly ICustomerRepository customerRepo;
 
         /// <summary>
-        /// AddressController. Manages customer calls to the database. Uses a wrapper for entity framework (AddressRepository). Dependency injection of the AddressRepository is done through startup.cs
+        /// CustomerController. Manages customer calls to the database. Uses a wrapper for entity framework (CustomerRepository). Dependency injection of the CustomerRepository is done through startup.cs
         /// </summary>
         /// <param name="customerRepository"></param>
         public CustomersController(ICustomerRepository customerRepository)
@@ -28,11 +28,11 @@ namespace Furs2FeathersAPI.Controllers
             customerRepo = customerRepository;
         }
 
-        // GET: api/Addresses
+        // GET: api/Customers
         [HttpGet]
         [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Customer), StatusCodes.Status200OK)] // successful get request
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
-        public async Task<ActionResult<IEnumerable<Furs2Feathers.Domain.Models.Customer>>> GetAddress()
+        public async Task<ActionResult<IEnumerable<Furs2Feathers.Domain.Models.Customer>>> GetCustomers()
         {
             var list = await customerRepo.ToListAsync();
 
@@ -40,12 +40,12 @@ namespace Furs2FeathersAPI.Controllers
             return Ok(list);
         }
 
-        // GET: api/Addresses/5
+        // GET: api/Customers/5
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Customer), StatusCodes.Status200OK)] // successful get request
         [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
-        public async Task<ActionResult<Furs2Feathers.Domain.Models.Customer>> GetAddress(int id)
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Customer>> GetCustomer(int id)
         {
             var customer = await customerRepo.FindAsync(id);
 
@@ -57,7 +57,7 @@ namespace Furs2FeathersAPI.Controllers
             return Ok(customer);
         }
 
-        // PUT: api/Addresses/5
+        // PUT: api/Customers/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
@@ -65,7 +65,7 @@ namespace Furs2FeathersAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)] // from an update failing due to user error (id does not match any existing resource/database id for the entity)
         [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
         [ProducesResponseType(StatusCodes.Status500InternalServerError)] // if something unexpectedly went wrong with the database or http request/response
-        public async Task<IActionResult> PutAddress(int id, Furs2Feathers.Domain.Models.Customer customer)
+        public async Task<IActionResult> PutCustomer(int id, Furs2Feathers.Domain.Models.Customer customer)
         {
             if (id != customer.CustomerId)
             {
@@ -85,26 +85,26 @@ namespace Furs2FeathersAPI.Controllers
             }
         }
 
-        // POST: api/Addresses
+        // POST: api/Customers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
         [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Customer), StatusCodes.Status201Created)] // successful post and returns created object
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
-        public async Task<ActionResult<Furs2Feathers.Domain.Models.Customer>> PostAddress(Furs2Feathers.Domain.Models.Customer customer)
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Customer>> PostCustomer(Furs2Feathers.Domain.Models.Customer customer)
         {
             customerRepo.Add(customer);
             await customerRepo.SaveChangesAsync();
 
-            return CreatedAtAction("GetAddress", new { id = customer.CustomerId }, customer);
+            return CreatedAtAction("GetCustomer", new { id = customer.CustomerId }, customer);
         }
 
-        // DELETE: api/Addresses/5
+        // DELETE: api/Customers/5
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)] // success, nothing returned (works as intended, request fulfilled)
         [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<Furs2Feathers.Domain.Models.Customer>> DeleteAddress(int id)
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Customer>> DeleteCustomer(int id)
         {
             var customer = await customerRepo.FindAsyncAsNoTracking(id); // get this customer matching this id
             // with tracking there are id errors even with just one row in the database so using AsNoTracking instead
