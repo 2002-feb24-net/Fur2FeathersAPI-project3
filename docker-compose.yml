@@ -11,8 +11,9 @@ version: '3.7'
 services:
 
   web:
-    build: Furs2Feathers
-
+    build: 
+      context: Furs2Feathers
+      dockerfile: api.Dockerfile
     depends_on:
       - data
     ports:
@@ -27,13 +28,14 @@ services:
       UseHttpsRedirection: 'false'
 
   data:
-    image: postgres:12.0
+    build:
+      context: NotesService
+      dockerfile: db.Dockerfile
+    image: jhbui1/f2f-backend:1.0
     ports:
       - 5432:5432
     networks:
       - default
-    environment:
-      POSTGRES_PASSWORD: 35122jhb
 
 networks:
   default:
