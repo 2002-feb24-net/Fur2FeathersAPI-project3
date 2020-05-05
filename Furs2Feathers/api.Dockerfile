@@ -11,7 +11,7 @@ COPY ["./Furs2Feathers.Domain/Furs2Feathers.Domain.csproj", "Furs2Feathers.Domai
 RUN dotnet restore 
 
 COPY . ./
-RUN dotnet build Furs2FeathersAPI -c Release -o out
+RUN dotnet publish Furs2FeathersAPI -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 WORKDIR /app
