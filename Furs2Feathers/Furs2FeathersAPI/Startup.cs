@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
+
 namespace Furs2FeathersAPI
 {
     //dotnet ef dbcontext scaffold "Host=localhost;Database=mydatabase;Username=postgres;Password=35122jhb" Npgsql.EntityFrameworkCore.PostgreSQL -o Models
@@ -61,9 +62,10 @@ namespace Furs2FeathersAPI
                     options.UseSqlServer(connection));
             }
 
-
+           
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IClaimsRepository, ClaimsRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
 
 
             // support switching between database providers using runtime configuration
