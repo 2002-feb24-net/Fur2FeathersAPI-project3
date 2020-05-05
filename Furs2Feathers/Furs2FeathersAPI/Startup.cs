@@ -33,7 +33,7 @@ namespace Furs2FeathersAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplicationInsightsTelemetry();
+            //services.AddApplicationInsightsTelemetry();
 
             // switch between database providers using runtime configuration
             // (the existing migrations are SQL-Server-specific, but the model itself is not)

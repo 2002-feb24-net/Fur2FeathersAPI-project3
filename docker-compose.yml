@@ -24,13 +24,12 @@ services:
     environment:
       DatabaseConnection: f2fdbPostgreSqlDockerCompose
       ConnectionStrings__f2fdbPostgreSqlDockerCompose: Host=data;Database=f2fdb;Username=postgres;Password=35122jhb
-      EnsureDatabaseCreated: 'true'
       CorsOrigins__0: http://localhost:4200
       UseHttpsRedirection: 'false'
 
   data:
     build:
-      context: NotesService
+      context: Furs2Feathers
       dockerfile: db.Dockerfile
     image: jhbui1/f2f-backend:1.0
     ports:
