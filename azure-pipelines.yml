@@ -92,6 +92,7 @@ stages:
               dockerComposeFile: '**/docker-compose.prod.yml'
               action: 'Build services'
             displayName: docker build
+
           - task: DockerCompose@0
             inputs:
               containerregistrytype: 'Container Registry'
@@ -99,6 +100,7 @@ stages:
               dockerComposeFile: '**/docker-compose.prod.yml'
               action: 'Push services'
             displayName: docker push
+
 
           - task: AzureWebAppContainer@1
             inputs:
