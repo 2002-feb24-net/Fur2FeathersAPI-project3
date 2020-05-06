@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Furs2Feathers.DataAccess.Models;
+using Furs2Feathers.DataAccess.Repositories;
 
 namespace Furs2FeathersAPI.Controllers
 {
@@ -13,111 +14,109 @@ namespace Furs2FeathersAPI.Controllers
     [ApiController]
     public class PoliciesController : ControllerBase
     {
-        private readonly f2fdbContext _context;
+        /// <summary>
+        /// Private field. Initialized with the PoliciesRepository and then has a constant reference (the field is readonly)
+        /// </summary>
+        private readonly IPoliciesRepository policiesRepo;
 
-        public PoliciesController(f2fdbContext context)
+        /// <summary>
+        /// PoliciesController. Manages policies calls to the database. Uses a wrapper for entity framework (PoliciesRepository). Dependency injection of the PoliciesRepository is done through startup.cs
+        /// </summary>
+        /// <param name="policiesRepository"></param>
+        public PoliciesController(IPoliciesRepository policiesRepository)
         {
-            _context = context;
+            policiesRepo = policiesRepository;
         }
 
         // GET: api/Policies
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Policies>>> GetPolicies()
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Policies), StatusCodes.Status200OK)] // successful get request
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        public async Task<ActionResult<IEnumerable<Furs2Feathers.Domain.Models.Policies>>> GetPolicies()
         {
-            return await _context.Policies.ToListAsync();
+            var list = await policiesRepo.ToListAsync();
+
+
+            return Ok(list);
         }
 
         // GET: api/Policies/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Policies>> GetPolicies(int id)
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Policies), StatusCodes.Status200OK)] // successful get request
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Policies>> GetPolicies(int id)
         {
-            var policies = await _context.Policies.FindAsync(id);
+            var policies = await policiesRepo.FindAsync(id);
 
             if (policies == null)
             {
                 return NotFound();
             }
 
-            return policies;
+            return Ok(policies);
         }
 
         // PUT: api/Policies/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPolicies(int id, Policies policies)
+        [ProducesResponseType(StatusCodes.Status204NoContent)] // success, nothing returned (works as intended, request fulfilled)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // from an update failing due to user error (id does not match any existing resource/database id for the entity)
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // if something unexpectedly went wrong with the database or http request/response
+        public async Task<IActionResult> PutPolicies(int id, Furs2Feathers.Domain.Models.Policies policies)
         {
             if (id != policies.PolicyId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(policies).State = EntityState.Modified;
-
-            try
+            /*_context.Entry(policies).State = EntityState.Modified;*/
+            if (!await policiesRepo.ModifyStateAsync(policies, id))
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
+                // if false, then modifying state failed
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!PoliciesExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NoContent();
+                // successful put
             }
-
-            return NoContent();
         }
 
         // POST: api/Policies
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Policies>> PostPolicies(Policies policies)
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Policies), StatusCodes.Status201Created)] // successful post and returns created object
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Policies>> PostPolicies(Furs2Feathers.Domain.Models.Policies policies)
         {
-            _context.Policies.Add(policies);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (PoliciesExists(policies.PolicyId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            policiesRepo.Add(policies);
+            await policiesRepo.SaveChangesAsync();
 
             return CreatedAtAction("GetPolicies", new { id = policies.PolicyId }, policies);
         }
 
         // DELETE: api/Policies/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Policies>> DeletePolicies(int id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)] // success, nothing returned (works as intended, request fulfilled)
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Policies>> DeletePolicies(int id)
         {
-            var policies = await _context.Policies.FindAsync(id);
+            var policies = await policiesRepo.FindAsyncAsNoTracking(id); // get this policies matching this id
+            // with tracking there are id errors even with just one row in the database so using AsNoTracking instead
             if (policies == null)
             {
                 return NotFound();
             }
 
-            _context.Policies.Remove(policies);
-            await _context.SaveChangesAsync();
+            policiesRepo.Remove(policies);
+            await policiesRepo.SaveChangesAsync();
 
-            return policies;
-        }
-
-        private bool PoliciesExists(int id)
-        {
-            return _context.Policies.Any(e => e.PolicyId == id);
+            return NoContent();
         }
     }
 }

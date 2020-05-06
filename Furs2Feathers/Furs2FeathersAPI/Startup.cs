@@ -71,7 +71,8 @@ namespace Furs2FeathersAPI
             services.AddScoped<IPetRepository, PetRepository>();
             services.AddScoped<IPlanRepository, PlanRepository>();
             services.AddScoped<IPlanProLabelsRepository, PlanProLabelsRepository>();
-
+            services.AddScoped<IPlanReviewsRepository, PlanReviewsRepository>();
+            services.AddScoped<IPoliciesRepository, PoliciesRepository>();
 
             // support switching between database providers using runtime configuration
 
