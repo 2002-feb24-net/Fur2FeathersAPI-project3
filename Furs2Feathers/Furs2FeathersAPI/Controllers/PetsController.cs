@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Furs2Feathers.DataAccess.Models;
+using Furs2Feathers.Domain.Interfaces;
 
 namespace Furs2FeathersAPI.Controllers
 {
@@ -13,111 +14,109 @@ namespace Furs2FeathersAPI.Controllers
     [ApiController]
     public class PetsController : ControllerBase
     {
-        private readonly f2fdbContext _context;
+        /// <summary>
+        /// Private field. Initialized with the PetRepository and then has a constant reference (the field is readonly)
+        /// </summary>
+        private readonly IPetRepository petRepo;
 
-        public PetsController(f2fdbContext context)
+        /// <summary>
+        /// PetsController. Manages pet calls to the database. Uses a wrapper for entity framework (PetRepository). Dependency injection of the PetRepository is done through startup.cs
+        /// </summary>
+        /// <param name="petRepository"></param>
+        public PetsController(IPetRepository petRepository)
         {
-            _context = context;
+            petRepo = petRepository;
         }
 
         // GET: api/Pets
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Pet>>> GetPet()
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Pet), StatusCodes.Status200OK)] // successful get request
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        public async Task<ActionResult<IEnumerable<Furs2Feathers.Domain.Models.Pet>>> GetPets()
         {
-            return await _context.Pet.ToListAsync();
+            var list = await petRepo.ToListAsync();
+
+
+            return Ok(list);
         }
 
         // GET: api/Pets/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Pet>> GetPet(int id)
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Pet), StatusCodes.Status200OK)] // successful get request
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Pet>> GetPet(int id)
         {
-            var pet = await _context.Pet.FindAsync(id);
+            var pet = await petRepo.FindAsync(id);
 
             if (pet == null)
             {
                 return NotFound();
             }
 
-            return pet;
+            return Ok(pet);
         }
 
         // PUT: api/Pets/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPet(int id, Pet pet)
+        [ProducesResponseType(StatusCodes.Status204NoContent)] // success, nothing returned (works as intended, request fulfilled)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // from an update failing due to user error (id does not match any existing resource/database id for the entity)
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // if something unexpectedly went wrong with the database or http request/response
+        public async Task<IActionResult> PutPet(int id, Furs2Feathers.Domain.Models.Pet pet)
         {
             if (id != pet.PetId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(pet).State = EntityState.Modified;
-
-            try
+            /*_context.Entry(pet).State = EntityState.Modified;*/
+            if (!await petRepo.ModifyStateAsync(pet, id))
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
+                // if false, then modifying state failed
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!PetExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NoContent();
+                // successful put
             }
-
-            return NoContent();
         }
 
         // POST: api/Pets
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Pet>> PostPet(Pet pet)
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Pet), StatusCodes.Status201Created)] // successful post and returns created object
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Pet>> PostPet(Furs2Feathers.Domain.Models.Pet pet)
         {
-            _context.Pet.Add(pet);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (PetExists(pet.PetId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            petRepo.Add(pet);
+            await petRepo.SaveChangesAsync();
 
             return CreatedAtAction("GetPet", new { id = pet.PetId }, pet);
         }
 
         // DELETE: api/Pets/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Pet>> DeletePet(int id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)] // success, nothing returned (works as intended, request fulfilled)
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Pet>> DeletePet(int id)
         {
-            var pet = await _context.Pet.FindAsync(id);
+            var pet = await petRepo.FindAsyncAsNoTracking(id); // get this pet matching this id
+            // with tracking there are id errors even with just one row in the database so using AsNoTracking instead
             if (pet == null)
             {
                 return NotFound();
             }
 
-            _context.Pet.Remove(pet);
-            await _context.SaveChangesAsync();
+            petRepo.Remove(pet);
+            await petRepo.SaveChangesAsync();
 
-            return pet;
-        }
-
-        private bool PetExists(int id)
-        {
-            return _context.Pet.Any(e => e.PetId == id);
+            return NoContent();
         }
     }
 }
