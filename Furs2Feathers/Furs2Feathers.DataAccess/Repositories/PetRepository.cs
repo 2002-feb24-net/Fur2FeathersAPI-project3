@@ -201,9 +201,9 @@ namespace Furs2Feathers.DataAccess.Repositories
         /// <returns></returns>
         public async Task<bool> ModifyStateAsync(Domain.Models.Pet pet, int id)
         {
-            var mappedAddress = Mapper.MapPet(pet);
+            var mappedPet = Mapper.MapPet(pet);
             /*_context.Entry(pet).State = EntityState.Modified;*/
-            _context.Entry(mappedAddress).State = EntityState.Modified;
+            _context.Entry(mappedPet).State = EntityState.Modified;
 
             try
             {
