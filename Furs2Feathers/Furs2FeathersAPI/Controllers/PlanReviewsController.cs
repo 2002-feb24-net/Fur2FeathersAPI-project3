@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Furs2Feathers.DataAccess.Models;
+using Furs2Feathers.Domain.Interfaces;
 
 namespace Furs2FeathersAPI.Controllers
 {
@@ -13,111 +14,109 @@ namespace Furs2FeathersAPI.Controllers
     [ApiController]
     public class PlanReviewsController : ControllerBase
     {
-        private readonly f2fdbContext _context;
+        /// <summary>
+        /// Private field. Initialized with the PlanReviewsRepository and then has a constant reference (the field is readonly)
+        /// </summary>
+        private readonly IPlanReviewsRepository planReviewsRepo;
 
-        public PlanReviewsController(f2fdbContext context)
+        /// <summary>
+        /// PlanReviewsController. Manages planReviews calls to the database. Uses a wrapper for entity framework (PlanReviewsRepository). Dependency injection of the PlanReviewsRepository is done through startup.cs
+        /// </summary>
+        /// <param name="planReviewsRepository"></param>
+        public PlanReviewsController(IPlanReviewsRepository planReviewsRepository)
         {
-            _context = context;
+            planReviewsRepo = planReviewsRepository;
         }
 
         // GET: api/PlanReviews
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PlanReviews>>> GetPlanReviews()
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.PlanReviews), StatusCodes.Status200OK)] // successful get request
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        public async Task<ActionResult<IEnumerable<Furs2Feathers.Domain.Models.PlanReviews>>> GetPlanReviews()
         {
-            return await _context.PlanReviews.ToListAsync();
+            var list = await planReviewsRepo.ToListAsync();
+
+
+            return Ok(list);
         }
 
         // GET: api/PlanReviews/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<PlanReviews>> GetPlanReviews(int id)
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.PlanReviews), StatusCodes.Status200OK)] // successful get request
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.PlanReviews>> GetPlanReviews(int id)
         {
-            var planReviews = await _context.PlanReviews.FindAsync(id);
+            var planReviews = await planReviewsRepo.FindAsync(id);
 
             if (planReviews == null)
             {
                 return NotFound();
             }
 
-            return planReviews;
+            return Ok(planReviews);
         }
 
         // PUT: api/PlanReviews/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPlanReviews(int id, PlanReviews planReviews)
+        [ProducesResponseType(StatusCodes.Status204NoContent)] // success, nothing returned (works as intended, request fulfilled)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // from an update failing due to user error (id does not match any existing resource/database id for the entity)
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // if something unexpectedly went wrong with the database or http request/response
+        public async Task<IActionResult> PutPlanReviews(int id, Furs2Feathers.Domain.Models.PlanReviews planReviews)
         {
             if (id != planReviews.PlanReviewId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(planReviews).State = EntityState.Modified;
-
-            try
+            /*_context.Entry(planReviews).State = EntityState.Modified;*/
+            if (!await planReviewsRepo.ModifyStateAsync(planReviews, id))
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
+                // if false, then modifying state failed
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!PlanReviewsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NoContent();
+                // successful put
             }
-
-            return NoContent();
         }
 
         // POST: api/PlanReviews
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<PlanReviews>> PostPlanReviews(PlanReviews planReviews)
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.PlanReviews), StatusCodes.Status201Created)] // successful post and returns created object
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.PlanReviews>> PostPlanReviews(Furs2Feathers.Domain.Models.PlanReviews planReviews)
         {
-            _context.PlanReviews.Add(planReviews);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (PlanReviewsExists(planReviews.PlanReviewId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            planReviewsRepo.Add(planReviews);
+            await planReviewsRepo.SaveChangesAsync();
 
             return CreatedAtAction("GetPlanReviews", new { id = planReviews.PlanReviewId }, planReviews);
         }
 
         // DELETE: api/PlanReviews/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<PlanReviews>> DeletePlanReviews(int id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)] // success, nothing returned (works as intended, request fulfilled)
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.PlanReviews>> DeletePlanReviews(int id)
         {
-            var planReviews = await _context.PlanReviews.FindAsync(id);
+            var planReviews = await planReviewsRepo.FindAsyncAsNoTracking(id); // get this planReviews matching this id
+            // with tracking there are id errors even with just one row in the database so using AsNoTracking instead
             if (planReviews == null)
             {
                 return NotFound();
             }
 
-            _context.PlanReviews.Remove(planReviews);
-            await _context.SaveChangesAsync();
+            planReviewsRepo.Remove(planReviews);
+            await planReviewsRepo.SaveChangesAsync();
 
-            return planReviews;
-        }
-
-        private bool PlanReviewsExists(int id)
-        {
-            return _context.PlanReviews.Any(e => e.PlanReviewId == id);
+            return NoContent();
         }
     }
 }
