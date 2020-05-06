@@ -20,7 +20,7 @@ namespace Furs2FeathersAPI.Controllers
         private readonly IInvoiceRepository invoiceRepo;
 
         /// <summary>
-        /// AddressController. Manages invoice calls to the database. Uses a wrapper for entity framework (InvoiceRepository). Dependency injection of the InvoiceRepository is done through startup.cs
+        /// InvoiceController. Manages invoice calls to the database. Uses a wrapper for entity framework (InvoiceRepository). Dependency injection of the InvoiceRepository is done through startup.cs
         /// </summary>
         /// <param name="invoiceRepository"></param>
         public InvoicesController(IInvoiceRepository invoiceRepository)
