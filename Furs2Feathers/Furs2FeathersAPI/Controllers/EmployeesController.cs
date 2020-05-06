@@ -20,7 +20,7 @@ namespace Furs2FeathersAPI.Controllers
         private readonly IEmployeeRepository employeeRepo;
 
         /// <summary>
-        /// AddressController. Manages employee calls to the database. Uses a wrapper for entity framework (EmployeeRepository). Dependency injection of the EmployeeRepository is done through startup.cs
+        /// EmployeesController. Manages employee calls to the database. Uses a wrapper for entity framework (EmployeeRepository). Dependency injection of the EmployeeRepository is done through startup.cs
         /// </summary>
         /// <param name="employeeRepository"></param>
         public EmployeesController(IEmployeeRepository employeeRepository)
