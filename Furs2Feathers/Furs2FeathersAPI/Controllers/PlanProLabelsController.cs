@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Furs2Feathers.DataAccess.Models;
+using Furs2Feathers.DataAccess.Repositories;
 
 namespace Furs2FeathersAPI.Controllers
 {
@@ -13,111 +14,109 @@ namespace Furs2FeathersAPI.Controllers
     [ApiController]
     public class PlanProLabelsController : ControllerBase
     {
-        private readonly f2fdbContext _context;
+        /// <summary>
+        /// Private field. Initialized with the PlanProLabelsRepository and then has a constant reference (the field is readonly)
+        /// </summary>
+        private readonly IPlanProLabelsRepository planProLabelsRepo;
 
-        public PlanProLabelsController(f2fdbContext context)
+        /// <summary>
+        /// PlanProLabelsController. Manages planProLabels calls to the database. Uses a wrapper for entity framework (PlanProLabelsRepository). Dependency injection of the PlanProLabelsRepository is done through startup.cs
+        /// </summary>
+        /// <param name="planProLabelsRepository"></param>
+        public PlanProLabelsController(IPlanProLabelsRepository planProLabelsRepository)
         {
-            _context = context;
+            planProLabelsRepo = planProLabelsRepository;
         }
 
         // GET: api/PlanProLabels
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PlanProLabels>>> GetPlanProLabels()
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.PlanProLabels), StatusCodes.Status200OK)] // successful get request
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        public async Task<ActionResult<IEnumerable<Furs2Feathers.Domain.Models.PlanProLabels>>> GetPlanProLabels()
         {
-            return await _context.PlanProLabels.ToListAsync();
+            var list = await planProLabelsRepo.ToListAsync();
+
+
+            return Ok(list);
         }
 
         // GET: api/PlanProLabels/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<PlanProLabels>> GetPlanProLabels(int id)
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.PlanProLabels), StatusCodes.Status200OK)] // successful get request
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.PlanProLabels>> GetPlanProLabels(int id)
         {
-            var planProLabels = await _context.PlanProLabels.FindAsync(id);
+            var planProLabels = await planProLabelsRepo.FindAsync(id);
 
             if (planProLabels == null)
             {
                 return NotFound();
             }
 
-            return planProLabels;
+            return Ok(planProLabels);
         }
 
         // PUT: api/PlanProLabels/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPlanProLabels(int id, PlanProLabels planProLabels)
+        [ProducesResponseType(StatusCodes.Status204NoContent)] // success, nothing returned (works as intended, request fulfilled)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // from an update failing due to user error (id does not match any existing resource/database id for the entity)
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // if something unexpectedly went wrong with the database or http request/response
+        public async Task<IActionResult> PutPlanProLabels(int id, Furs2Feathers.Domain.Models.PlanProLabels planProLabels)
         {
             if (id != planProLabels.PlanProLabelsId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(planProLabels).State = EntityState.Modified;
-
-            try
+            /*_context.Entry(planProLabels).State = EntityState.Modified;*/
+            if (!await planProLabelsRepo.ModifyStateAsync(planProLabels, id))
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
+                // if false, then modifying state failed
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!PlanProLabelsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NoContent();
+                // successful put
             }
-
-            return NoContent();
         }
 
         // POST: api/PlanProLabels
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<PlanProLabels>> PostPlanProLabels(PlanProLabels planProLabels)
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.PlanProLabels), StatusCodes.Status201Created)] // successful post and returns created object
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.PlanProLabels>> PostPlanProLabels(Furs2Feathers.Domain.Models.PlanProLabels planProLabels)
         {
-            _context.PlanProLabels.Add(planProLabels);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (PlanProLabelsExists(planProLabels.PlanProLabelsId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            planProLabelsRepo.Add(planProLabels);
+            await planProLabelsRepo.SaveChangesAsync();
 
             return CreatedAtAction("GetPlanProLabels", new { id = planProLabels.PlanProLabelsId }, planProLabels);
         }
 
         // DELETE: api/PlanProLabels/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<PlanProLabels>> DeletePlanProLabels(int id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)] // success, nothing returned (works as intended, request fulfilled)
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.PlanProLabels>> DeletePlanProLabels(int id)
         {
-            var planProLabels = await _context.PlanProLabels.FindAsync(id);
+            var planProLabels = await planProLabelsRepo.FindAsyncAsNoTracking(id); // get this planProLabels matching this id
+            // with tracking there are id errors even with just one row in the database so using AsNoTracking instead
             if (planProLabels == null)
             {
                 return NotFound();
             }
 
-            _context.PlanProLabels.Remove(planProLabels);
-            await _context.SaveChangesAsync();
+            planProLabelsRepo.Remove(planProLabels);
+            await planProLabelsRepo.SaveChangesAsync();
 
-            return planProLabels;
-        }
-
-        private bool PlanProLabelsExists(int id)
-        {
-            return _context.PlanProLabels.Any(e => e.PlanProLabelsId == id);
+            return NoContent();
         }
     }
 }
