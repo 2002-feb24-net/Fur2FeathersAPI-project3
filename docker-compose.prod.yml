@@ -4,7 +4,7 @@ services:
 
   web:
     build:
-      context: furs2feathers
+      context: Furs2Feathers
       dockerfile: api.Dockerfile
     image: jhbui1/f2f-api:1.0
     environment:
@@ -20,7 +20,7 @@ services:
 
   data:
     build:
-      context: furs2feathers
+      context: Furs2Feathers
       dockerfile: db.Dockerfile
     image: jhbui1/f2f-db:1.0
     environment: 
