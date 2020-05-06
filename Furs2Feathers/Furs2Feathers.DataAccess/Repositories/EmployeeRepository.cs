@@ -114,7 +114,7 @@ namespace Furs2Feathers.DataAccess.Repositories
         }
 
         /// <summary>
-        /// Wraps a call to EntityFramework Core ToListAsync (generating a list of Addresses) and returns a mapped entity list instead of a DataAccess.Model used to communicate with EF Core.
+        /// Wraps a call to EntityFramework Core ToListAsync (generating a list of Employees) and returns a mapped entity list instead of a DataAccess.Model used to communicate with EF Core.
         /// 
         /// EF Core FindAsync:
         /// Finds an entity with the given primary key values. If an entity with the given primary key values is being tracked by the context, then it is returned immediately without making a request to the database. Otherwise, a query is made to the database for an entity with the given primary key values and this entity, if found, is attached to the context and returned. If no entity is found, then null is returned.
@@ -133,7 +133,7 @@ namespace Furs2Feathers.DataAccess.Repositories
         }
 
         /// <summary>
-        /// Wraps a call to EntityFramework Core ToListAsync (generating a list of Addresses) and returns a mapped entity list instead of a DataAccess.Model used to communicate with EF Core.
+        /// Wraps a call to EntityFramework Core ToListAsync (generating a list of Employees) and returns a mapped entity list instead of a DataAccess.Model used to communicate with EF Core.
         /// 
         /// EF Core FindAsync:
         /// Finds an entity with the given primary key values. If an entity with the given primary key values is being tracked by the context, then it is returned immediately without making a request to the database. Otherwise, a query is made to the database for an entity with the given primary key values and this entity, if found, is attached to the context and returned. If no entity is found, then null is returned.
@@ -194,15 +194,15 @@ namespace Furs2Feathers.DataAccess.Repositories
         }
 
         /// <summary>
-        /// This method tries to update an entity in the database through setting EntityFramework Core's Entry property to EntityState.Modified. If the update fails an exception is thrown. If the update succeeds then the address parameter object passed in is saved to the database.
+        /// This method tries to update an entity in the database through setting EntityFramework Core's Entry property to EntityState.Modified. If the update fails an exception is thrown. If the update succeeds then the employee parameter object passed in is saved to the database.
         /// </summary>
-        /// <param name="address"></param>
+        /// <param name="employee"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<bool> ModifyStateAsync(Domain.Models.Employee address, int id)
+        public async Task<bool> ModifyStateAsync(Domain.Models.Employee employee, int id)
         {
-            var mappedAddress = Mapper.MapEmployee(address);
-            /*_context.Entry(address).State = EntityState.Modified;*/
+            var mappedAddress = Mapper.MapEmployee(employee);
+            /*_context.Entry(employee).State = EntityState.Modified;*/
             _context.Entry(mappedAddress).State = EntityState.Modified;
 
             try
@@ -214,7 +214,7 @@ namespace Furs2Feathers.DataAccess.Repositories
                 if (!AddressExists(id))
                 {
                     return false;
-                    // address not found
+                    // employee not found
                 }
                 else
                 {
