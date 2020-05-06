@@ -12,9 +12,15 @@ namespace Furs2FeathersAPI.Controllers
     [ApiController]
     public class ClaimsController : ControllerBase
     {
+        /// <summary>
+        /// Private field. Initialized with the ClaimsRepository and then has a constant reference (the field is readonly)
+        /// </summary>
         private readonly IClaimsRepository claimsRepo;
 
-
+        /// <summary>
+        /// ClaimsController. Manages claims calls to the database. Uses a wrapper for entity framework (ClaimsRepository). Dependency injection of the ClaimsRepository is done through startup.cs
+        /// </summary>
+        /// <param name="claimsRepository"></param>
         public ClaimsController(IClaimsRepository claimsRepository)
         {
             claimsRepo = claimsRepository;
@@ -22,6 +28,8 @@ namespace Furs2FeathersAPI.Controllers
 
         // GET: api/Claims
         [HttpGet]
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Claims), StatusCodes.Status200OK)] // successful get request
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
         public async Task<ActionResult<IEnumerable<Furs2Feathers.Domain.Models.Claims>>> GetClaims()
         {
             var list = await claimsRepo.ToListAsync();
@@ -32,7 +40,10 @@ namespace Furs2FeathersAPI.Controllers
 
         // GET: api/Claims/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Furs2Feathers.Domain.Models.Claims>> GetClaim(int id)
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Claims), StatusCodes.Status200OK)] // successful get request
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Claims>> GetClaims(int id)
         {
             var claims = await claimsRepo.FindAsync(id);
 
@@ -48,7 +59,11 @@ namespace Furs2FeathersAPI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutClaim(int id, Furs2Feathers.Domain.Models.Claims claims)
+        [ProducesResponseType(StatusCodes.Status204NoContent)] // success, nothing returned (works as intended, request fulfilled)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // from an update failing due to user error (id does not match any existing resource/database id for the entity)
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)] // if something unexpectedly went wrong with the database or http request/response
+        public async Task<IActionResult> PutClaims(int id, Furs2Feathers.Domain.Models.Claims claims)
         {
             if (id != claims.ClaimId)
             {
@@ -72,17 +87,22 @@ namespace Furs2FeathersAPI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Furs2Feathers.Domain.Models.Claims>> PostClaim(Furs2Feathers.Domain.Models.Claims claims)
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Claims), StatusCodes.Status201Created)] // successful post and returns created object
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Claims>> PostClaims(Furs2Feathers.Domain.Models.Claims claims)
         {
             claimsRepo.Add(claims);
             await claimsRepo.SaveChangesAsync();
 
-            return CreatedAtAction("GetClaim", new { id = claims.ClaimId }, claims);
+            return CreatedAtAction("GetClaims", new { id = claims.ClaimId }, claims);
         }
 
         // DELETE: api/Claims/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Furs2Feathers.Domain.Models.Claims>> DeleteClaim(int id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)] // success, nothing returned (works as intended, request fulfilled)
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Claims>> DeleteClaims(int id)
         {
             var claims = await claimsRepo.FindAsyncAsNoTracking(id); // get this claims matching this id
             // with tracking there are id errors even with just one row in the database so using AsNoTracking instead
