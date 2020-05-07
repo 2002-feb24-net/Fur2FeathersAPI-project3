@@ -69,10 +69,43 @@ stages:
 
   jobs:
 
-  - deployment: deploy_dev
+  - job: push
+
+  #- deployment: deploy_dev
 
     pool:
       vmImage: ubuntu-latest
+    
+    steps:
+
+    - task: DockerCompose@0
+      displayName: docker-compose build
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerComposeFile: 'docker-compose.prod.yml'
+        action: 'Build services'
+
+    - task: DockerCompose@0
+      displayName: docker-compose push
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'dockerhub-jhbui1'
+        dockerComposeFile: 'docker-compose.prod.yml'
+        action: 'Push services'
+
+    - task: PublishPipelineArtifact@1
+      displayName: k8s manifest publish
+      inputs:
+        targetPath: 'k8s'
+        artifact: 'k8s'
+        publishLocation: 'pipeline'
+
+  - deployment: deploy_dev
+    dependsOn: push
+
+    pool:
+      vmImage: ubuntu-latest
+
 
     environment: dev
 
@@ -81,30 +114,27 @@ stages:
         deploy:
           steps:
 
-          - checkout: self
-
-          - download: none
-
-          - task: DockerCompose@0
+          - task: KubernetesManifest@0
+            displayName: kubectl apply
             inputs:
-              containerregistrytype: 'Container Registry'
-              dockerRegistryEndpoint: 'jhbui1'
-              dockerComposeFile: './docker-compose.prod.yml'
-              action: 'Build services'
-            displayName: docker build
+              action: 'deploy'
+              kubernetesServiceConnection: 'dev-default-1588783708961'
+              namespace: 'default'
+              manifests: '$(Pipeline.Workspace)/k8s/**/*.yml'
 
-          - task: DockerCompose@0
+          - task: Kubernetes@1
+            displayName: kubectl rollout restart
             inputs:
-              containerregistrytype: 'Container Registry'
-              dockerRegistryEndpoint: 'jhbui1'
-              dockerComposeFile: '**/docker-compose.prod.yml'
-              action: 'Push services'
-            displayName: docker push
+              connectionType: 'Kubernetes Service Connection'
+              kubernetesServiceEndpoint: 'dev-default-1588783708961'
+              namespace: 'default'
+              command: 'rollout'
+              useConfigurationFile: true
+              configuration: '$(Pipeline.Workspace)/k8s/deployment'
+              arguments: 'restart'
+              secretType: 'dockerRegistry'
+              containerRegistryType: 'Azure Container Registry'
 
 
-          - task: AzureWebAppContainer@1
-            inputs:
-              azureSubscription: 'Azure subscription 1(1)(0331d11f-08e8-4a46-91f1-7c02b4a66c26)'
-              appName: 'f2f-api'
-              multicontainerConfigFile: 'docker-compose.prod.yml'
-            displayName: app service deploy
+
+
