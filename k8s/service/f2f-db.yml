@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: f2f-db
+  labels:
+    app: f2f
+    role: db
+spec:
+  ports:
+  - port: 5432
+  selector:
+    app: f2f
+    role: db
