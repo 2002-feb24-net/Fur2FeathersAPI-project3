@@ -149,7 +149,7 @@ stages:
               action: 'deploy'
               kubernetesServiceConnection: 'dev-default-1588889109714'
               namespace: 'default'
-              manifests: '''$(Pipeline.Workspace)/k8s/**/*.yml'''
+              manifests: '$(Pipeline.Workspace)/k8s/**/*.yml'
           - task: Kubernetes@1
             displayName: kubectl rollout restart
             inputs:
