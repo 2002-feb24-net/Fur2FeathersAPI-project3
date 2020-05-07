@@ -8,6 +8,7 @@ COPY ./Furs2Feathers.sln ./
 COPY ["./Furs2FeathersAPI/*.csproj", "Furs2FeathersAPI/"]
 COPY ["./Furs2Feathers.DataAccess/*.csproj", "Furs2Feathers.DataAccess/"]
 COPY ["./Furs2Feathers.Domain/Furs2Feathers.Domain.csproj", "Furs2Feathers.Domain/"]
+COPY ["./Furs2Feathers.Test/Furs2Feathers.Test.csproj", "Furs2Feathers.Test/"]
 RUN dotnet restore 
 
 COPY . ./
