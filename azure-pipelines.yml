@@ -90,7 +90,8 @@ stages:
               containerregistrytype: 'Container Registry'
               dockerRegistryEndpoint: 'jhbui1'
               dockerComposeFile: './docker-compose.prod.yml'
-              action: 'Build services'
+              action: 'Run a Docker Compose command'
+              dockerComposeCommand: 'docker-compose -f docker-compose.prod.yml up --build'
             displayName: docker build
 
           - task: DockerCompose@0
