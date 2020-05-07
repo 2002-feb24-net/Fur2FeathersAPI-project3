@@ -15,7 +15,7 @@ services:
       - default
     environment:
       DatabaseConnection: f2fdbPostgreSqlDockerCompose
-      ConnectionStrings__f2fdbPostgreSqlDockerCompose: Host=data;Database=f2fdb;Username=postgres;Password=35122jhb
+      ConnectionStrings__f2fdbPostgreSqlDockerCompose: Host=data;Username=postgres;Password=35122jhb
       CorsOrigins__0: http://localhost:4200
       CorsOrigins__1: http://fur2feathers.azurewebsites.net/home
       CorsOrigins__2: https://fur2feathers.azurewebsites.net/home

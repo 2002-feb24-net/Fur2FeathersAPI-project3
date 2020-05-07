@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: f2f-db
+  labels:
+    app: f2f
+    role: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: f2f
+      role: db
+  template:
+    metadata:
+      labels:
+        app: f2f
+        role: db
+    spec:
+      containers:
+      - name: f2f-db
+        image: jhbui1/f2f-db:1.0
+        ports:
+        - containerPort: 5432
