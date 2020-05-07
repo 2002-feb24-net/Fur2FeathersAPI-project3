@@ -7,7 +7,6 @@ services:
       context: Furs2Feathers
       dockerfile: api.Dockerfile
     image: jhbui1/f2f-api:1.0
-
   data:
     build:
       context: Furs2Feathers
