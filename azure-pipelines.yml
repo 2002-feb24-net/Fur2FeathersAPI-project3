@@ -119,7 +119,7 @@ stages:
             displayName: kubectl apply
             inputs:
               action: 'deploy'
-              kubernetesServiceConnection: 'dev-default'
+              kubernetesServiceConnection: 'f2fCluster'
               manifests: '$(Pipeline.Workspace)/k8s/**/*.yml'
 
           
@@ -128,7 +128,7 @@ stages:
             displayName: kubectl rollout restart
             inputs:
               connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceEndpoint: 'dev-default'
+              kubernetesServiceEndpoint: 'f2fCluster'
               namespace: 'default'
               command: 'rollout'
               useConfigurationFile: true
