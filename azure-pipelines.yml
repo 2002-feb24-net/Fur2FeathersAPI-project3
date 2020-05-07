@@ -114,19 +114,21 @@ stages:
         deploy:
           steps:
 
+
           - task: KubernetesManifest@0
             displayName: kubectl apply
             inputs:
               action: 'deploy'
-              kubernetesServiceConnection: 'dev-default-1588783708961'
-              namespace: 'default'
+              kubernetesServiceConnection: 'dev-default'
               manifests: '$(Pipeline.Workspace)/k8s/**/*.yml'
+
+          
 
           - task: Kubernetes@1
             displayName: kubectl rollout restart
             inputs:
               connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceEndpoint: 'dev-default-1588783708961'
+              kubernetesServiceEndpoint: 'dev-default'
               namespace: 'default'
               command: 'rollout'
               useConfigurationFile: true
