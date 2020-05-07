@@ -7,34 +7,9 @@ services:
       context: Furs2Feathers
       dockerfile: api.Dockerfile
     image: jhbui1/f2f-api:1.0
-    depends_on:
-      - data
-    ports:
-      - 80:80
-    networks: 
-      - default
-    environment:
-      DatabaseConnection: f2fdbPostgreSqlDockerCompose
-      ConnectionStrings__f2fdbPostgreSqlDockerCompose: Host=data;Database=f2fdb;Username=postgres;Password=35122jhb
-      CorsOrigins__0: http://localhost:4200
-      CorsOrigins__1: http://fur2feathers.azurewebsites.net/home
-      CorsOrigins__2: https://fur2feathers.azurewebsites.net/home
-      CorsOrigins__3: http://fur2feathers-docker.azurewebsites.net/home
-      CorsOrigins__4: https://fur2feathers-docker.azurewebsites.net/home
-
-      UseHttpsRedirection: 'false'
 
   data:
     build:
       context: Furs2Feathers
       dockerfile: db.Dockerfile
     image: jhbui1/f2f-db:1.0
-    ports:
-      - 5432:5432
-    networks: 
-      - default
-    environment: 
-      POSTGRES_PASSWORD: 35122jhb
-  
-  #networks:
-    #default:  

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: f2f-api
+  labels:
+    app: f2f
+    role: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: f2f
+      role: api
+  template:
+    metadata:
+      labels:
+        app: f2f
+        role: api
+    spec:
+      containers:
+      - name: f2f-api
+        image: jhbui1/f2f-api:1.0
+        ports:
+        - containerPort: 80
+        env:
+        - name: DatabaseConnection
+          value: f2fDbPostgreSqlK8s
+        - name: ConnectionStrings__f2fDbPostgreSqlK8s
+          value: Host=f2f-db;Username=postgres;Password=Pass@word
+        - name: CorsOrigins__0
+          value: http://localhost:4200
+        - name: CorsOrigins__1
+          value: http://192.168.99.100:4200
+        - name: CorsOrigins__2
+          value: http://fur2feathers.azurewebsites.net
+        - name: CorsOrigins__3
+          value: https://furs2feathers.azurewebsites.net
+        - name: CorsOrigins__4
+          value: http://furs2feathers-docker.azurewebsites.net
+        - name: CorsOrigins__5
+          value: https://furs2feathers-docker.azurewebsites.net
+        - name: CorsOrigins__6
+          value: http://a219561f758a948d793acb07ca69013c-358843724.us-east-2.elb.amazonaws.com
+        - name: UseHttpsRedirection
+          value: 'false'
