@@ -36,5 +36,5 @@ services:
     environment: 
       POSTGRES_PASSWORD: 35122jhb
   
-  networks:
-    default:  
+  #networks:
+    #default:  
