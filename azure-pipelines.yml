@@ -89,7 +89,7 @@ stages:
       displayName: docker-compose push
       inputs:
         containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'dockerhub-jhbui1'
+        dockerRegistryEndpoint: 'jhbui1'
         dockerComposeFile: 'docker-compose.prod.yml'
         action: 'Push services'
 
