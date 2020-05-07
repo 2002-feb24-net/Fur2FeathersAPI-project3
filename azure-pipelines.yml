@@ -4,64 +4,96 @@ trigger:
 pr:
 - master
 
-variables:
-  appDir: Furs2Feathers
-stages: 
+stages:
+
 # - stage: build
-#   jobs: 
-#   - job: build
-#     pool:
-#       name: Azure Pipelines
-#       vmImage: ubuntu-latest
-#       demands:
-#       - npm
-#       - java
 
-#     steps:
-#       - task: DockerCompose@0
-#         inputs:
-#           containerregistrytype: 'Container Registry'
-#           dockerRegistryEndpoint: 'jhbui1'
-#           dockerComposeFile: '**/docker-compose.prod.yml'
-#           action: 'Build services'
+  # jobs:
 
-#   - job: test
+  # - job: build
 
-#     pool:
-#       vmImage: ubuntu-latest
+  #   pool:
+  #     vmImage: ubuntu-latest
 
-#     steps:
+  #   steps:
+
+  #   - task: DockerCompose@0
+  #     displayName: docker-compose build
+  #     inputs:
+  #       containerregistrytype: 'Container Registry'
+  #       dockerComposeFile: 'docker-compose.prod.yml'
+  #       action: 'Build services'
+
+  # - job: test
+
+  #   pool:
+  #     vmImage: ubuntu-latest
+
+  #   variables:
+  #     sdkVersion: 3.1.x
+  #     solutionPath: Furs2Feathers
+  #     buildConfiguration: Release
+
+  #   steps:
+
+  #   - task: UseDotNet@2
+  #     displayName: dotnet 2.1.x
+  #     inputs:
+  #       packageType: 'sdk'
+  #       version: '2.1.x'
+
+  # - task: SonarCloudPrepare@1
+  #   displayName: sonarcloud prepare
+  #   inputs:
+  #     SonarCloud: 'f2f-ng'
+  #     organization: 'jhbui1'
+  #     scannerMode: 'MSBuild'
+  #     projectKey: '2002-feb24-net_Fur2FeathersAPI-project3'
+  #     projectName: 'f2f-api'
+  #     extraProperties: 'sonar.cs.opencover.reportsPaths=$(Common.TestResultsDirectory)/*/coverage.opencover.xml'
     
-#     - task: Npm@1
-#       displayName: 'npm install'
-#       inputs:
-#         workingDir: ./fur2feathers
-#         verbose: false
-    
-#     - task: SonarCloudPrepare@1
-#       inputs:
-#         SonarCloud: 'f2f-ng'
-#         organization: '2002-feb24-net'
-#         scannerMode: CLI
-#         configMode: manual
-#         cliProjectKey: '2002-feb24-net_Fur2FeathersNg-project3'
-#         cliProjectName: 'f2f-ng'
-#         cliSources: $(appDir)/src
-#         extraProperties: |
-#             sonar.coverage.exclusions=**/*.spec.ts
-#             sonar.typescript.lcov.reportPaths=$(appDir)/coverage/$(appDir)/lcov.info
+  #   - task: UseDotNet@2
+  #     displayName: dotnet $(sdkVersion)
+  #     inputs:
+  #       packageType: 'sdk'
+  #       version: '$(sdkVersion)'
 
-#     - script: npx ng test --browsers ChromeHeadless --no-watch --code-coverage
-#       workingDirectory: ./fur2feathers
-#       continueOnError: true
-#       displayName: ng test
-#     - task: SonarCloudAnalyze@1
-#       displayName: sonarcloud analysis run
+  #   - script: dotnet build
+  #       --configuration $(buildConfiguration)
+  #     displayName: dotnet build
+  #     workingDirectory: $(solutionPath)
 
-#     - task: SonarCloudPublish@1
-#       inputs:
-#           pollingTimeoutSec: '300'
-#       displayName: sonarcloud results build publish
+  #   - script: dotnet test
+  #       --configuration $(buildConfiguration)
+  #       --logger trx
+  #       --no-build
+  #       --results-directory $(Common.TestResultsDirectory)
+  #       --settings coverlet.runsettings
+  #     displayName: dotnet test
+  #     workingDirectory: $(solutionPath)
+
+  #   - task: SonarCloudAnalyze@1
+  #     displayName: sonarcloud analysis run
+
+  #   - task: PublishTestResults@2
+  #     displayName: test results build publish
+  #     condition: succeededOrFailed()
+  #     inputs:
+  #       testResultsFormat: 'VSTest'
+  #       testResultsFiles: '$(Common.TestResultsDirectory)/*.trx'
+
+  #   - task: PublishCodeCoverageResults@1
+  #     displayName: code coverage build publish
+  #     condition: succeededOrFailed()
+  #     inputs:
+  #       codeCoverageTool: Cobertura
+  #       summaryFileLocation: $(Common.TestResultsDirectory)/*/coverage.cobertura.xml
+
+  #   - task: SonarCloudPublish@1
+  #     displayName: sonarcloud results build publish
+  #     condition: succeededOrFailed()
+  #     inputs:
+  #       pollingTimeoutSec: '300'
 
 - stage: deploy
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -71,11 +103,9 @@ stages:
 
   - job: push
 
-  #- deployment: deploy_dev
-
     pool:
       vmImage: ubuntu-latest
-    
+
     steps:
 
     - task: DockerCompose@0
@@ -90,9 +120,9 @@ stages:
       inputs:
         containerregistrytype: 'Container Registry'
         dockerRegistryEndpoint: 'jhbui1'
-        dockerComposeFile: 'docker-compose.prod.yml'
+        dockerComposeFile: '**/docker-compose.prod.yml'
         action: 'Push services'
-
+    
     - task: PublishPipelineArtifact@1
       displayName: k8s manifest publish
       inputs:
@@ -106,7 +136,6 @@ stages:
     pool:
       vmImage: ubuntu-latest
 
-
     environment: dev
 
     strategy:
@@ -114,20 +143,13 @@ stages:
         deploy:
           steps:
 
-
-          
           - task: KubernetesManifest@0
-            displayName: kubectl apply
+            displayName: kubectly apply
             inputs:
               action: 'deploy'
               kubernetesServiceConnection: 'dev-default-1588889109714'
               namespace: 'default'
               manifests: '$(Pipeline.Workspace)/k8s/**/*.yml'
-
-          
-
-          
-
           - task: Kubernetes@1
             displayName: kubectl rollout restart
             inputs:
@@ -140,7 +162,3 @@ stages:
               arguments: 'restart'
               secretType: 'dockerRegistry'
               containerRegistryType: 'Azure Container Registry'
-
-
-
-
