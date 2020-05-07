@@ -4,9 +4,13 @@ services:
 
   web:
     build:
-      context: furs2feathers
+      context: Furs2Feathers
       dockerfile: api.Dockerfile
     image: jhbui1/f2f-api:1.0
+    ports:
+      - 80:80
+    networks: 
+      - default
     environment:
       DatabaseConnection: f2fdbPostgreSqlDockerCompose
       ConnectionStrings__f2fdbPostgreSqlDockerCompose: Host=data;Database=f2fdb;Username=postgres;Password=35122jhb
@@ -20,10 +24,12 @@ services:
 
   data:
     build:
-      context: furs2feathers
+      context: Furs2Feathers
       dockerfile: db.Dockerfile
     image: jhbui1/f2f-db:1.0
+    networks: 
+      - default
     environment: 
-      POSTGRES_PASSWORD: Pass@word
+      POSTGRES_PASSWORD: 35122jhb
   
     
