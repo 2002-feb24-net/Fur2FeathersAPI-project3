@@ -91,7 +91,7 @@ stages:
               dockerRegistryEndpoint: 'jhbui1'
               dockerComposeFile: './docker-compose.prod.yml'
               action: 'Run a Docker Compose command'
-              dockerComposeCommand: 'docker-compose -f docker-compose.prod.yml up --build'
+              dockerComposeCommand: 'up --build'
             displayName: docker build
 
           - task: DockerCompose@0
