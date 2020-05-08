@@ -62,7 +62,7 @@ namespace Furs2FeathersAPI
                     options.UseSqlServer(connection));
             }
 
-           
+
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IClaimsRepository, ClaimsRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
@@ -79,7 +79,7 @@ namespace Furs2FeathersAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Fur2Feathers API", Version = "v1" });
             });
-            
+
             var allowedOrigins = Configuration.GetSection("CorsOrigins").Get<string[]>();
 
             services.AddCors(options =>
@@ -99,7 +99,7 @@ namespace Furs2FeathersAPI
                 options.ReturnHttpNotAcceptable = true;
                 options.SuppressAsyncSuffixInActionNames = false;
             });
-       
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -124,9 +124,8 @@ namespace Furs2FeathersAPI
                     app.ApplicationServices.CreateScope())
 
                 // Mish style injection and migrate
-                fdbContext.Database.EnsureDeleted();
                 fdbContext.Database.Migrate();
-            /*fdbContext.Database.EnsureCreated();*/
+
 
             app.UseSwagger();
 
