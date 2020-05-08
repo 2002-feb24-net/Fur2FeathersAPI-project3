@@ -14,7 +14,7 @@ services:
     build: 
       context: Furs2Feathers
       dockerfile: api.Dockerfile
-    image: jhbui1/f2f-api:!.0
+    image: jhbui1/f2f-api:1.0
     depends_on:
       - data
     ports:

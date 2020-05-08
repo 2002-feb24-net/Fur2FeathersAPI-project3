@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: f2f-db
   labels:
-
     app: f2f
     role: db
 spec:

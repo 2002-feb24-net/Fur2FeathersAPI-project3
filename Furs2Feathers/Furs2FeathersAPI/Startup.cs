@@ -120,7 +120,11 @@ namespace Furs2FeathersAPI
             app.UseCors(CorsPolicyName);
 
             app.UseAuthorization();
+            using (var scope =
+                    app.ApplicationServices.CreateScope())
 
+            using (var context = scope.ServiceProvider.GetService<f2fdbContext>())
+                context.Database.Migrate();
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
