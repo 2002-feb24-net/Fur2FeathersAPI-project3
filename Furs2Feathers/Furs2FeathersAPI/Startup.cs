@@ -75,7 +75,11 @@ namespace Furs2FeathersAPI
             services.AddScoped<IPoliciesRepository, PoliciesRepository>();
 
             // support switching between database providers using runtime configuration
-
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Fur2Feathers API", Version = "v1" });
+            });
+            
             var allowedOrigins = Configuration.GetSection("CorsOrigins").Get<string[]>();
 
             services.AddCors(options =>
@@ -95,11 +99,7 @@ namespace Furs2FeathersAPI
                 options.ReturnHttpNotAcceptable = true;
                 options.SuppressAsyncSuffixInActionNames = false;
             });
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Fur2Feathers API", Version = "v1" });
-            })
-            ;
+       
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
