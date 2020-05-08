@@ -41,6 +41,6 @@ spec:
         - name: CorsOrigins__5
           value: https://fur2feathers-docker.azurewebsites.net
         - name: CorsOrigins__6
-          value: http://a219561f758a948d793acb07ca69013c-358843724.us-east-2.elb.amazonaws.com
+          value: http://a968100db8e724fb0b7d96626d2657ff-1546671109.us-east-2.elb.amazonaws.com
         - name: UseHttpsRedirection
           value: 'false'
