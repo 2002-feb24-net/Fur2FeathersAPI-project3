@@ -103,7 +103,7 @@ namespace Furs2FeathersAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, f2fdbContext fdbContext)
         {
             if (env.IsDevelopment())
             {
@@ -123,8 +123,9 @@ namespace Furs2FeathersAPI
             using (var scope =
                     app.ApplicationServices.CreateScope())
 
-            using (var context = scope.ServiceProvider.GetService<f2fdbContext>())
-                context.Database.Migrate();
+            // Mish style injection and migrate
+            fdbContext.Database.Migrate();
+
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
