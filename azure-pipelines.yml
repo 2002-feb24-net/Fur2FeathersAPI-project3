@@ -147,14 +147,15 @@ stages:
             displayName: kubectly apply
             inputs:
               action: 'deploy'
-              kubernetesServiceConnection: 'dev-default-1588889109714'
+              kubernetesServiceConnection: 'f2f-k8s-backend'
               namespace: 'default'
               manifests: '$(Pipeline.Workspace)/k8s/**/*.yml'
+
           - task: Kubernetes@1
             displayName: kubectl rollout restart
             inputs:
               connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceEndpoint: 'dev-default-1588889109714'
+              kubernetesServiceEndpoint: 'f2f-k8s-backend'
               namespace: 'default'
               command: 'rollout'
               useConfigurationFile: true
