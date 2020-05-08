@@ -123,8 +123,9 @@ namespace Furs2FeathersAPI
             using (var scope =
                     app.ApplicationServices.CreateScope())
 
-            // Mish style injection and migrate
-            fdbContext.Database.Migrate();
+                /*// Mish style injection and migrate
+            fdbContext.Database.Migrate();*/
+                fdbContext.Database.EnsureCreated();
 
             app.UseSwagger();
 
