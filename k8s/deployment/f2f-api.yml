@@ -20,6 +20,7 @@ spec:
       containers:
       - name: f2f-api
         image: jhbui1/f2f-api:1.0
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:

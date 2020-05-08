@@ -20,5 +20,6 @@ spec:
       containers:
       - name: f2f-db
         image: jhbui1/f2f-db:1.0
+        imagePullPolicy: Always
         ports:
         - containerPort: 5432
