@@ -30,6 +30,7 @@ spec:
           value: Host=f2f-db;Username=postgres;Password=35122jhb
         - name: CorsOrigins__0
           value: http://localhost:4200
+       
         - name: CorsOrigins__1
           value: http://192.168.99.100:4200
         - name: CorsOrigins__2
@@ -42,5 +43,7 @@ spec:
           value: https://fur2feathers-docker.azurewebsites.net
         - name: CorsOrigins__6
           value: http://a968100db8e724fb0b7d96626d2657ff-1546671109.us-east-2.elb.amazonaws.com
+        - name: CorsOrigins__7
+          value: https://localhost:4200
         - name: UseHttpsRedirection
           value: 'false'
