@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Furs2Feathers.DataAccess.Models
 {
@@ -11,6 +12,7 @@ namespace Furs2Feathers.DataAccess.Models
             Customer = new HashSet<Customer>();
         }
 
+        [Key]
         public int PolicyId { get; set; }
         public decimal Deductible { get; set; }
         public decimal Premium { get; set; }

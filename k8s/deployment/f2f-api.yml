@@ -30,7 +30,6 @@ spec:
           value: Host=f2f-db;Username=postgres;Password=35122jhb
         - name: CorsOrigins__0
           value: http://localhost:4200
-       
         - name: CorsOrigins__1
           value: http://192.168.99.100:4200
         - name: CorsOrigins__2

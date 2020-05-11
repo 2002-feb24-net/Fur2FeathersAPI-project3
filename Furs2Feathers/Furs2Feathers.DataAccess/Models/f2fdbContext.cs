@@ -31,16 +31,12 @@ namespace Furs2Feathers.DataAccess.Models
                 entity.ToTable("address");
 
                 entity.Property(e => e.AddressId)
-                    .HasColumnName("address_id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("address_id");
+
+                    
 
                 entity.Property(e => e.City)
                     .HasColumnName("city")
-                    .HasMaxLength(100);
-
-                entity.Property(e => e.Country)
-                    .IsRequired()
-                    .HasColumnName("country")
                     .HasMaxLength(100);
 
                 entity.Property(e => e.State)
@@ -100,13 +96,9 @@ namespace Furs2Feathers.DataAccess.Models
                 entity.HasIndex(e => e.Policies)
                     .HasName("fki_cust_policies");
 
-                entity.HasIndex(e => e.Username)
-                    .HasName("uq_uname")
-                    .IsUnique();
 
                 entity.Property(e => e.CustomerId)
-                    .HasColumnName("customer_id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("customer_id");
 
                 entity.Property(e => e.Address).HasColumnName("address");
 
@@ -114,10 +106,6 @@ namespace Furs2Feathers.DataAccess.Models
                     .HasColumnName("email")
                     .HasMaxLength(100);
 
-                entity.Property(e => e.Password)
-                    .IsRequired()
-                    .HasColumnName("password")
-                    .HasMaxLength(100);
 
                 entity.Property(e => e.Phone)
                     .HasColumnName("phone")
@@ -125,10 +113,6 @@ namespace Furs2Feathers.DataAccess.Models
 
                 entity.Property(e => e.Policies).HasColumnName("policies");
 
-                entity.Property(e => e.Username)
-                    .IsRequired()
-                    .HasColumnName("username")
-                    .HasMaxLength(30);
 
                 entity.HasOne(d => d.AddressNavigation)
                     .WithMany(p => p.Customer)
@@ -213,8 +197,7 @@ namespace Furs2Feathers.DataAccess.Models
                 entity.ToTable("pet");
 
                 entity.Property(e => e.PetId)
-                    .HasColumnName("pet_id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("pet_id");
 
                 entity.Property(e => e.Description)
                     .HasColumnName("description")
@@ -240,8 +223,7 @@ namespace Furs2Feathers.DataAccess.Models
                 entity.ToTable("plan");
 
                 entity.Property(e => e.PlanId)
-                    .HasColumnName("plan_id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("plan_id");
 
                 entity.Property(e => e.Description)
                     .HasColumnName("description")
@@ -259,8 +241,7 @@ namespace Furs2Feathers.DataAccess.Models
                 entity.ToTable("plan_pro_labels");
 
                 entity.Property(e => e.PlanProLabelsId)
-                    .HasColumnName("plan_pro_labels_id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("plan_pro_labels_id");
 
                 entity.Property(e => e.Labels)
                     .HasColumnName("labels")

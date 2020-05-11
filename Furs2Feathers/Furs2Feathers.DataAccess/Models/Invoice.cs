@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Furs2Feathers.DataAccess.Models
 {
     public partial class Invoice
     {
+        [Key]
         public int InvoiceId { get; set; }
         public decimal Cost { get; set; }
         public int CustomerId { get; set; }

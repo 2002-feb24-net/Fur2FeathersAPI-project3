@@ -35,8 +35,13 @@ namespace Furs2Feathers.DataAccess.Repositories
         /// <returns>Domain.Models.Customer</returns>
         public void Add(Domain.Models.Customer entity)
         {
+            var mappedAddress = Mapper.MapAddress(entity);
+            _context.Set<Address>().Add(mappedAddress);
+            //_context.Entry(mappedAddress).Reload();
             var mappedEntity = Mapper.MapCustomer(entity);
-            _context.Set<Customer>().Add(mappedEntity);
+            //mappedEntity.Address = mappedAddress.AddressId;
+            _context.Set<Customer>().Add(mappedEntity );
+            _context.SaveChanges();
         }
 
         /// <summary>

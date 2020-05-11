@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Furs2Feathers.DataAccess.Models
 {
@@ -11,6 +12,7 @@ namespace Furs2Feathers.DataAccess.Models
             Policies = new HashSet<Policies>();
         }
 
+        [Key]
         public int PetId { get; set; }
         public string Name { get; set; }
         public string ImgUrl { get; set; }

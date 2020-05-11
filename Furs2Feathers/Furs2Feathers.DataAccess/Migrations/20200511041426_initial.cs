@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Furs2Feathers.DataAccess.Migrations
 {
@@ -11,12 +12,12 @@ namespace Furs2Feathers.DataAccess.Migrations
                 name: "address",
                 columns: table => new
                 {
-                    address_id = table.Column<int>(nullable: false),
+                    address_id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     city = table.Column<string>(maxLength: 100, nullable: true),
                     street = table.Column<string>(maxLength: 100, nullable: true),
                     state = table.Column<string>(maxLength: 100, nullable: true),
-                    zip = table.Column<string>(maxLength: 10, nullable: true),
-                    country = table.Column<string>(maxLength: 100, nullable: false)
+                    zip = table.Column<string>(maxLength: 10, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -137,13 +138,12 @@ namespace Furs2Feathers.DataAccess.Migrations
                 name: "customer",
                 columns: table => new
                 {
-                    customer_id = table.Column<int>(nullable: false),
+                    customer_id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     policies = table.Column<int>(nullable: true),
                     address = table.Column<int>(nullable: true),
-                    email = table.Column<string>(maxLength: 100, nullable: true),
-                    phone = table.Column<string>(maxLength: 12, nullable: true),
-                    password = table.Column<string>(maxLength: 100, nullable: false),
-                    username = table.Column<string>(maxLength: 30, nullable: false)
+                    email = table.Column<string>(maxLength: 100, nullable: false),
+                    phone = table.Column<string>(maxLength: 12, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -241,12 +241,6 @@ namespace Furs2Feathers.DataAccess.Migrations
                 name: "fki_cust_policies",
                 table: "customer",
                 column: "policies");
-
-            migrationBuilder.CreateIndex(
-                name: "uq_uname",
-                table: "customer",
-                column: "username",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_invoice_customer_id",

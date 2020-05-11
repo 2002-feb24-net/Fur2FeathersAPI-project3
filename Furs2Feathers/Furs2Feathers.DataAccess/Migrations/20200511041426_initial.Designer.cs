@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Furs2Feathers.DataAccess.Migrations
 {
     [DbContext(typeof(f2fdbContext))]
-    [Migration("20200508170653_initial")]
+    [Migration("20200511041426_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,17 +24,13 @@ namespace Furs2Feathers.DataAccess.Migrations
             modelBuilder.Entity("Furs2Feathers.DataAccess.Models.Address", b =>
                 {
                     b.Property<int>("AddressId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("address_id")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("City")
                         .HasColumnName("city")
-                        .HasColumnType("character varying(100)")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasColumnName("country")
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
@@ -89,21 +85,18 @@ namespace Furs2Feathers.DataAccess.Migrations
             modelBuilder.Entity("Furs2Feathers.DataAccess.Models.Customer", b =>
                 {
                     b.Property<int>("CustomerId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("customer_id")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int?>("Address")
                         .HasColumnName("address")
                         .HasColumnType("integer");
 
                     b.Property<string>("Email")
-                        .HasColumnName("email")
-                        .HasColumnType("character varying(100)")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnName("password")
+                        .HasColumnName("email")
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
@@ -115,12 +108,6 @@ namespace Furs2Feathers.DataAccess.Migrations
                     b.Property<int?>("Policies")
                         .HasColumnName("policies")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnName("username")
-                        .HasColumnType("character varying(30)")
-                        .HasMaxLength(30);
 
                     b.HasKey("CustomerId");
 
@@ -136,10 +123,6 @@ namespace Furs2Feathers.DataAccess.Migrations
 
                     b.HasIndex("Policies")
                         .HasName("fki_cust_policies");
-
-                    b.HasIndex("Username")
-                        .IsUnique()
-                        .HasName("uq_uname");
 
                     b.ToTable("customer");
                 });

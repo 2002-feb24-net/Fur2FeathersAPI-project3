@@ -8,12 +8,13 @@ namespace Furs2Feathers.Domain.Models
     {
         public int CustomerId { get; set; }
         public int? Policies { get; set; }
-        public int? Address { get; set; }
+        public string street { get; set; }
+        public string addr2 { get; set; }
+        public string city { get; set; }
+        public string state { get; set; }
+        public string zip { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public string Password { get; set; }
-        public string Username { get; set; }
-
         public Address AddressNavigation { get; set; }
         public Policies PoliciesNavigation { get; set; }
         public List<Invoice> Invoice { get; set; }

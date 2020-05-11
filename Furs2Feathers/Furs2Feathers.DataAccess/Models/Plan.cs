@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Furs2Feathers.DataAccess.Models
 {
@@ -10,6 +11,7 @@ namespace Furs2Feathers.DataAccess.Models
             PlanProLabels = new HashSet<PlanProLabels>();
         }
 
+        [Key]
         public int PlanId { get; set; }
         public decimal? EstCost { get; set; }
         public short? PositivesMax { get; set; }

@@ -19,7 +19,6 @@ namespace Furs2Feathers.DataAccess
                 AddressId = address.AddressId,
                 Street = address.Street,
                 City = address.City,
-                Country = address.Country,
                 State = address.State,
                 Zip = address.Zip
             };
@@ -41,17 +40,9 @@ namespace Furs2Feathers.DataAccess
             return new Domain.Models.Customer
             {
                 CustomerId = customer.CustomerId,
-                Address = customer.Address,
                 Email = customer.Email,
-                Password = customer.Password,
                 Phone = customer.Phone,
-                Policies = customer.Policies,
-                Username = customer.Username,
-                AddressNavigation = MapAddress(customer.AddressNavigation),
-                PoliciesNavigation = MapPolicies(customer.PoliciesNavigation),
-                Invoice = customer.Invoice.Select(MapInvoice).ToList(),
-                PlanReviews = customer.PlanReviews.Select(MapPlanReviews).ToList()
-          
+                Policies = customer.Policies
             };
         }
 
@@ -140,21 +131,29 @@ namespace Furs2Feathers.DataAccess
                 Claims = policies.Claims.Select(MapClaims).ToList(),
             };
         }
-        ///-------------------------------------------------------------------------------------------------------------------
-        ///-------------------------------------------------------------------------------------------------------------------
-        ///-------------------------------------------------------------------------------------------------------------------
-        ///-------------------------------------------------------------------------------------------------------------------
-        ///-------------------------------------------------------------------------------------------------------------------
         public static Models.Address MapAddress(Domain.Models.Address address)
         {
             return new Models.Address
             {
-                AddressId = address.AddressId,
                 Street = address.Street,
                 City = address.City,
-                Country = address.Country,
                 State = address.State,
                 Zip = address.Zip
+            };
+        }
+        ///-------------------------------------------------------------------------------------------------------------------
+        ///-------------------------------------------------------------------------------------------------------------------
+        ///-------------------------------------------------------------------------------------------------------------------
+        ///-------------------------------------------------------------------------------------------------------------------
+        ///-------------------------------------------------------------------------------------------------------------------
+        public static Models.Address MapAddress(Domain.Models.Customer address)
+        {
+            return new Models.Address
+            {
+                Street = address.street,
+                City = address.city,
+                State = address.state,
+                Zip = address.zip
             };
         }
 
@@ -174,16 +173,13 @@ namespace Furs2Feathers.DataAccess
             return new Models.Customer
             {
                 CustomerId = customer.CustomerId,
-                Address = customer.Address,
                 Email = customer.Email,
-                Password = customer.Password,
                 Phone = customer.Phone,
                 Policies = customer.Policies,
-                Username = customer.Username,
-                AddressNavigation = MapAddress(customer.AddressNavigation),
-                PoliciesNavigation = MapPolicies(customer.PoliciesNavigation),
-                Invoice = customer.Invoice.Select(MapInvoice).ToList(),
-                PlanReviews = customer.PlanReviews.Select(MapPlanReviews).ToList()
+                //AddressNavigation = MapAddress(customer.AddressNavigation)
+                //PoliciesNavigation = MapPolicies(customer.PoliciesNavigation),
+                //Invoice = customer.Invoice.Select(MapInvoice).ToList(),
+                //PlanReviews = customer.PlanReviews.Select(MapPlanReviews).ToList()
 
             };
         }
