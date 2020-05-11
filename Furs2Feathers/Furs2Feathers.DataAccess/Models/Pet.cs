@@ -18,6 +18,8 @@ namespace Furs2Feathers.DataAccess.Models
         public string ImgUrl { get; set; }
         public string Description { get; set; }
         public string Species { get; set; }
+        public int Age { get; set; }
+        public string Sex { get; set; }
 
         public virtual ICollection<Invoice> Invoice { get; set; }
         public virtual ICollection<Policies> Policies { get; set; }

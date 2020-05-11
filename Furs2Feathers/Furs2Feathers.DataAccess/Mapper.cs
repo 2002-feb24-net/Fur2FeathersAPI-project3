@@ -80,6 +80,8 @@ namespace Furs2Feathers.DataAccess
                 Name = pet.Name,
                 Description = pet.Description,
                 ImgUrl = pet.ImgUrl,
+                Age = pet.Age,
+                Sex = pet.Sex,
                 Invoice = pet.Invoice.Select(MapInvoice).ToList(),
                 Policies = pet.Policies.Select(MapPolicies).ToList()
             };
@@ -218,6 +220,8 @@ namespace Furs2Feathers.DataAccess
                 Name = pet.Name,
                 Description = pet.Description,
                 ImgUrl = pet.ImgUrl,
+                Age = pet.Age,
+                Sex = pet.Sex,
                 Invoice = pet.Invoice.Select(MapInvoice).ToList(),
                 Policies = pet.Policies.Select(MapPolicies).ToList()
             };

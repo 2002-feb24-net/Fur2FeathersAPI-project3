@@ -216,6 +216,14 @@ namespace Furs2Feathers.DataAccess.Models
                     .IsRequired()
                     .HasColumnName("species")
                     .HasColumnType("character varying");
+                entity.Property(e => e.Sex)
+                    .IsRequired()
+                    .HasColumnName("sex")
+                    .HasColumnType("character varying");
+                entity.Property(e => e.Age)
+                    .IsRequired()
+                    .HasColumnName("age")
+                    .HasColumnType("integer");
             });
 
             modelBuilder.Entity<Plan>(entity =>

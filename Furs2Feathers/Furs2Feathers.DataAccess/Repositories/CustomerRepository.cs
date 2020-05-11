@@ -37,11 +37,11 @@ namespace Furs2Feathers.DataAccess.Repositories
         {
             var mappedAddress = Mapper.MapAddress(entity);
             _context.Set<Address>().Add(mappedAddress);
-            //_context.Entry(mappedAddress).Reload();
-            var mappedEntity = Mapper.MapCustomer(entity);
-            //mappedEntity.Address = mappedAddress.AddressId;
-            _context.Set<Customer>().Add(mappedEntity );
             _context.SaveChanges();
+            _context.Entry(mappedAddress).Reload();
+            var mappedEntity = Mapper.MapCustomer(entity);
+            mappedEntity.Address = mappedAddress.AddressId;
+            _context.Set<Customer>().Add(mappedEntity);
         }
 
         /// <summary>
