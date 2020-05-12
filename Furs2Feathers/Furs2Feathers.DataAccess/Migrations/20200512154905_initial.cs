@@ -41,11 +41,15 @@ namespace Furs2Feathers.DataAccess.Migrations
                 name: "pet",
                 columns: table => new
                 {
-                    pet_id = table.Column<int>(nullable: false),
+                    pet_id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "character varying", nullable: false),
                     img_url = table.Column<string>(type: "character varying", nullable: true),
                     description = table.Column<string>(type: "character varying", nullable: true),
-                    species = table.Column<string>(type: "character varying", nullable: false)
+                    customerId = table.Column<int>(nullable: false),
+                    species = table.Column<string>(type: "character varying", nullable: false),
+                    age = table.Column<int>(type: "integer", nullable: false),
+                    sex = table.Column<string>(type: "character varying", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,7 +60,8 @@ namespace Furs2Feathers.DataAccess.Migrations
                 name: "plan",
                 columns: table => new
                 {
-                    plan_id = table.Column<int>(nullable: false),
+                    plan_id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     est_cost = table.Column<decimal>(type: "money", nullable: true),
                     positives_max = table.Column<short>(nullable: true),
                     description = table.Column<string>(type: "character varying", nullable: true)
@@ -99,7 +104,8 @@ namespace Furs2Feathers.DataAccess.Migrations
                 name: "plan_pro_labels",
                 columns: table => new
                 {
-                    plan_pro_labels_id = table.Column<int>(nullable: false),
+                    plan_pro_labels_id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     labels = table.Column<string>(type: "char", nullable: true),
                     plan_id = table.Column<int>(nullable: true)
                 },
@@ -142,6 +148,7 @@ namespace Furs2Feathers.DataAccess.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     policies = table.Column<int>(nullable: true),
                     address = table.Column<int>(nullable: true),
+                    name = table.Column<string>(maxLength: 100, nullable: true),
                     email = table.Column<string>(maxLength: 100, nullable: false),
                     phone = table.Column<string>(maxLength: 12, nullable: true)
                 },
