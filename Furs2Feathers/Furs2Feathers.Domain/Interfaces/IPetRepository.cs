@@ -8,12 +8,14 @@ namespace Furs2Feathers.Domain.Interfaces
 {
     public interface IPetRepository
     {
+        
         void Add(Pet entity);
         void AddRange(IEnumerable<Pet> entities);
         bool Any(Expression<Func<Pet, bool>> predicate);
         IEnumerable<Pet> FindAsync(Expression<Func<Pet, bool>> predicate);
         Task<Pet> FindAsync(int id);
         Task<Pet> FindAsyncAsNoTracking(int id);
+        IEnumerable<Pet> FindByCustId(int custId);
         Task<IEnumerable<Pet>> GetAll();
         Task<Pet> GetAsync(int id);
         Task<bool> ModifyStateAsync(Pet pet, int id);

@@ -57,6 +57,22 @@ namespace Furs2FeathersAPI.Controllers
             return Ok(pet);
         }
 
+        // GET: api/Pets/5
+        [HttpGet("cust/{id}")]
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Pet), StatusCodes.Status200OK)] // successful get request
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        public ActionResult<Furs2Feathers.Domain.Models.Pet[]> GetCustPets(int custId)
+        {
+            var pet = petRepo.FindByCustId(custId);
+
+            if (pet == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(pet);
+        }
         // PUT: api/Pets/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
