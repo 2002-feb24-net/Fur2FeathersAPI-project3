@@ -40,7 +40,8 @@ namespace Furs2FeathersAPI.Controllers
             return Ok(list);
         }
 
-        // GET: api/Customers/5
+        /*// GET: api/Customers/5
+         * Currently disabled to avoid ambiguous request error (two http get methods with one query parameter)
         [HttpGet("{id}")]
         [Route("")]
         [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Customer), StatusCodes.Status200OK)] // successful get request
@@ -63,7 +64,7 @@ namespace Furs2FeathersAPI.Controllers
             //}
             //else
             //   return GetCustomerByEmail(idOrEmail);
-        }
+        }*/
 
         // GET: api/Customers/5
         [HttpGet("{email}")]
