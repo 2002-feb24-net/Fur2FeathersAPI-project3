@@ -43,6 +43,7 @@ namespace Furs2FeathersAPI.Controllers
 
         // GET: api/Customers/5
         [Route("api/[controller]/id")]
+        [ApiExplorerSettings(IgnoreApi = true)] // avoid swagger error from ambigious routes (still available through postman or http client requests, etc)
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Customer), StatusCodes.Status200OK)] // successful get request
         [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
