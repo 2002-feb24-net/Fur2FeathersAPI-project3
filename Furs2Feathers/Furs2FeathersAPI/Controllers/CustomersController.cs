@@ -42,10 +42,6 @@ namespace Furs2FeathersAPI.Controllers
         }
 
         // helper method for the delete action method. Not public to apis or postman
-        [ApiExplorerSettings(IgnoreApi = true)] // avoid swagger error from ambigious routes (still available through postman or http client requests, etc)
-        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Customer), StatusCodes.Status200OK)] // successful get request
-        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
         protected async Task<ActionResult<Furs2Feathers.Domain.Models.Customer>> GetCustomer(int id)
         {
             var customer = await customerRepo.FindAsync(id);
