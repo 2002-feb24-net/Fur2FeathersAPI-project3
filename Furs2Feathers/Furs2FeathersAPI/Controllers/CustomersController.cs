@@ -45,13 +45,13 @@ namespace Furs2FeathersAPI.Controllers
         [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Customer), StatusCodes.Status200OK)] // successful get request
         [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
-        public async Task<ActionResult<Furs2Feathers.Domain.Models.Customer>> GetCustomer(string idOrEmail)
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Customer>> GetCustomer(int id)
         {
-            int num;
+            //int num;
             
-            if (Int32.TryParse(idOrEmail, out num))
-            {
-                var customer = await customerRepo.FindAsync(num);
+            //if (Int32.TryParse(idOrEmail, out num))
+            //{
+                var customer = await customerRepo.FindAsync(id);
 
                 if (customer == null)
                 {
@@ -59,14 +59,14 @@ namespace Furs2FeathersAPI.Controllers
                 }
 
                 return Ok(customer);
-            }
-            else
-               return GetCustomerByEmail(idOrEmail);
+            //}
+            //else
+            //   return GetCustomerByEmail(idOrEmail);
         }
 
         // GET: api/Customers/5
-       /* [HttpGet("{email}")]
-        [Route("api/customers/GetCustomerByEmail")]*/
+        [HttpGet("{email}")]
+        [Route("GetCustomerByEmail")]
         [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Customer), StatusCodes.Status200OK)] // successful get request
         [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
