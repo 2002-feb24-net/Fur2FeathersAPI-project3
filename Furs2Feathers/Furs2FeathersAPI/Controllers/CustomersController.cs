@@ -55,22 +55,22 @@ namespace Furs2FeathersAPI.Controllers
         }
 
 
-        // GET: api/Customers/5
-        [HttpGet("email/{email}")]
-        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Customer), StatusCodes.Status200OK)] // successful get request
-        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
-        public  ActionResult<Furs2Feathers.Domain.Models.Customer> GetCustomerEmail(string email)
-        {
-            var customer = customerRepo.FindAsync(e => e.Email == email);
+        //// GET: api/Customers/5
+        //[HttpGet("email/{email}")]
+        //[ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Customer), StatusCodes.Status200OK)] // successful get request
+        //[ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        //public  ActionResult<Furs2Feathers.Domain.Models.Customer> GetCustomerEmail(string email)
+        //{
+        //    var customer = customerRepo.FindAsync(e => e.Email == email);
 
-            if (customer == null)
-            {
-                return NotFound();
-            }
+        //    if (customer == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return Ok(customer);
-        }
+        //    return Ok(customer);
+        //}
 
         // PUT: api/Customers/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
