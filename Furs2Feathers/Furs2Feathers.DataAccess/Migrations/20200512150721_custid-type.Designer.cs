@@ -3,15 +3,17 @@ using System;
 using Furs2Feathers.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Furs2Feathers.DataAccess.Migrations
 {
     [DbContext(typeof(f2fdbContext))]
-    partial class f2fdbContextModelSnapshot : ModelSnapshot
+    [Migration("20200512150721_custid-type")]
+    partial class custidtype
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

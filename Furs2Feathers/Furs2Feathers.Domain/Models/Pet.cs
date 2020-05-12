@@ -11,7 +11,7 @@ namespace Furs2Feathers.Domain.Models
         public int PetId { get; set; }
         public string Name { get; set; }
         [ForeignKey("Customer")]
-        public string CustomerId { get; set; }
+        public int CustomerId { get; set; }
         public string ImgUrl { get; set; }
         public string Description { get; set; }
         public string Species { get; set; }
