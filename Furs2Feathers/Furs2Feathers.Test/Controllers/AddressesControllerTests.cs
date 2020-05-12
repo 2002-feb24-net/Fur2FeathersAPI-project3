@@ -28,6 +28,7 @@ namespace Furs2Feathers.Test.Controllers
         {
             // create a list of addresses to return
             var listOfAddresses = new List<Address>();
+
             listOfAddresses.Add(new Address
             {
                 AddressId = 1,
