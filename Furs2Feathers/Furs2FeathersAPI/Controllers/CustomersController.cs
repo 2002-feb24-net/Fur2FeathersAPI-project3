@@ -10,7 +10,7 @@ using Furs2Feathers.Domain.Interfaces;
 
 namespace Furs2FeathersAPI.Controllers
 {
-    [Route("api/[controller]")]
+    
     [ApiController]
     public class CustomersController : ControllerBase
     {
@@ -29,6 +29,7 @@ namespace Furs2FeathersAPI.Controllers
         }
 
         // GET: api/Customers
+        [Route("api/[controller]")]
         [HttpGet]
         [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Customer), StatusCodes.Status200OK)] // successful get request
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
@@ -40,30 +41,28 @@ namespace Furs2FeathersAPI.Controllers
             return Ok(list);
         }
 
-        /*// GET: api/Customers/5
-         * Currently disabled to avoid ambiguous request error (two http get methods with one query parameter)
-      
-        GetCustomer(int id)
-      
-            //int num;
-            
-            //if (Int32.TryParse(idOrEmail, out num))
-            //{
-                var customer = await customerRepo.FindAsync(id);
-
-                if (customer == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(customer);
-            //}
-            //else
-            //   return GetCustomerByEmail(idOrEmail);
-        */
-
         // GET: api/Customers/5
+        [Route("api/[controller]/id")]
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Customer), StatusCodes.Status200OK)] // successful get request
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
+        public async Task<ActionResult<Furs2Feathers.Domain.Models.Customer>> GetCustomer(int id)
+        {
+            var customer = await customerRepo.FindAsync(id);
+
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(customer);
+        }
+
+
+        // GET: api/Customers/email@email.com
         [HttpGet("{email}")]
+        [Route("api/[controller]/email")]
         [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Customer), StatusCodes.Status200OK)] // successful get request
         [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
@@ -83,6 +82,7 @@ namespace Furs2FeathersAPI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
+        [Route("api/[controller]")]
         [ProducesResponseType(StatusCodes.Status204NoContent)] // success, nothing returned (works as intended, request fulfilled)
         [ProducesResponseType(StatusCodes.Status400BadRequest)] // from an update failing due to user error (id does not match any existing resource/database id for the entity)
         [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
@@ -111,6 +111,7 @@ namespace Furs2FeathersAPI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
+        [Route("api/[controller]")]
         [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Customer), StatusCodes.Status201Created)] // successful post and returns created object
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
         public async Task<ActionResult<Furs2Feathers.Domain.Models.Customer>> PostCustomer(Furs2Feathers.Domain.Models.Customer customer)
@@ -123,6 +124,7 @@ namespace Furs2FeathersAPI.Controllers
 
         // DELETE: api/Customers/5
         [HttpDelete("{id}")]
+        [Route("api/[controller]")]
         [ProducesResponseType(StatusCodes.Status204NoContent)] // success, nothing returned (works as intended, request fulfilled)
         [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
