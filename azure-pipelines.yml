@@ -6,98 +6,98 @@ pr:
 
 stages:
 
-# - stage: build
+- stage: build
 
-  # jobs:
+  jobs:
 
-  # - job: build
+  - job: build
 
-  #   pool:
-  #     vmImage: ubuntu-latest
+    pool:
+      vmImage: ubuntu-latest
 
-  #   steps:
+    steps:
 
-  #   - task: DockerCompose@0
-  #     displayName: docker-compose build
-  #     inputs:
-  #       containerregistrytype: 'Container Registry'
-  #       dockerComposeFile: 'docker-compose.prod.yml'
-  #       action: 'Build services'
+    - task: DockerCompose@0
+      displayName: docker-compose build
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerComposeFile: 'docker-compose.prod.yml'
+        action: 'Build services'
 
-  # - job: test
+  - job: test
 
-  #   pool:
-  #     vmImage: ubuntu-latest
+    pool:
+      vmImage: ubuntu-latest
 
-  #   variables:
-  #     sdkVersion: 3.1.x
-  #     solutionPath: Furs2Feathers
-  #     buildConfiguration: Release
+    variables:
+      sdkVersion: 3.1.x
+      solutionPath: Furs2Feathers
+      buildConfiguration: Release
 
-  #   steps:
+    steps:
 
-  #   - task: UseDotNet@2
-  #     displayName: dotnet 2.1.x
-  #     inputs:
-  #       packageType: 'sdk'
-  #       version: '2.1.x'
+    - task: UseDotNet@2
+      displayName: dotnet 2.1.x
+      inputs:
+        packageType: 'sdk'
+        version: '2.1.x'
 
-  # - task: SonarCloudPrepare@1
-  #   displayName: sonarcloud prepare
-  #   inputs:
-  #     SonarCloud: 'f2f-ng'
-  #     organization: 'jhbui1'
-  #     scannerMode: 'MSBuild'
-  #     projectKey: '2002-feb24-net_Fur2FeathersAPI-project3'
-  #     projectName: 'f2f-api'
-  #     extraProperties: 'sonar.cs.opencover.reportsPaths=$(Common.TestResultsDirectory)/*/coverage.opencover.xml'
+    - task: SonarCloudPrepare@1
+      displayName: sonarcloud prepare
+      inputs:
+        SonarCloud: 'f2f-ng'
+        organization: 'jhbui1'
+        scannerMode: 'MSBuild'
+        projectKey: '2002-feb24-net_Fur2FeathersAPI-project3'
+        projectName: 'f2f-api'
+        extraProperties: 'sonar.cs.opencover.reportsPaths=$(Common.TestResultsDirectory)/*/coverage.opencover.xml'
     
-  #   - task: UseDotNet@2
-  #     displayName: dotnet $(sdkVersion)
-  #     inputs:
-  #       packageType: 'sdk'
-  #       version: '$(sdkVersion)'
+    - task: UseDotNet@2
+      displayName: dotnet $(sdkVersion)
+      inputs:
+        packageType: 'sdk'
+        version: '$(sdkVersion)'
 
-  #   - script: dotnet build
-  #       --configuration $(buildConfiguration)
-  #     displayName: dotnet build
-  #     workingDirectory: $(solutionPath)
+    - script: dotnet build
+        --configuration $(buildConfiguration)
+      displayName: dotnet build
+      workingDirectory: $(solutionPath)
 
-  #   - script: dotnet test
-  #       --configuration $(buildConfiguration)
-  #       --logger trx
-  #       --no-build
-  #       --results-directory $(Common.TestResultsDirectory)
-  #       --settings coverlet.runsettings
-  #     displayName: dotnet test
-  #     workingDirectory: $(solutionPath)
+    - script: dotnet test
+        --configuration $(buildConfiguration)
+        --logger trx
+        --no-build
+        --results-directory $(Common.TestResultsDirectory)
+        --settings coverlet.runsettings
+      displayName: dotnet test
+      workingDirectory: $(solutionPath)
 
-  #   - task: SonarCloudAnalyze@1
-  #     displayName: sonarcloud analysis run
+    - task: SonarCloudAnalyze@1
+      displayName: sonarcloud analysis run
 
-  #   - task: PublishTestResults@2
-  #     displayName: test results build publish
-  #     condition: succeededOrFailed()
-  #     inputs:
-  #       testResultsFormat: 'VSTest'
-  #       testResultsFiles: '$(Common.TestResultsDirectory)/*.trx'
+    - task: PublishTestResults@2
+      displayName: test results build publish
+      condition: succeededOrFailed()
+      inputs:
+        testResultsFormat: 'VSTest'
+        testResultsFiles: '$(Common.TestResultsDirectory)/*.trx'
 
-  #   - task: PublishCodeCoverageResults@1
-  #     displayName: code coverage build publish
-  #     condition: succeededOrFailed()
-  #     inputs:
-  #       codeCoverageTool: Cobertura
-  #       summaryFileLocation: $(Common.TestResultsDirectory)/*/coverage.cobertura.xml
+    - task: PublishCodeCoverageResults@1
+      displayName: code coverage build publish
+      condition: succeededOrFailed()
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: $(Common.TestResultsDirectory)/*/coverage.cobertura.xml
 
-  #   - task: SonarCloudPublish@1
-  #     displayName: sonarcloud results build publish
-  #     condition: succeededOrFailed()
-  #     inputs:
-  #       pollingTimeoutSec: '300'
+    - task: SonarCloudPublish@1
+      displayName: sonarcloud results build publish
+      condition: succeededOrFailed()
+      inputs:
+        pollingTimeoutSec: '300'
 
 - stage: deploy
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-  # dependsOn: build
+  dependsOn: build
 
   jobs:
 

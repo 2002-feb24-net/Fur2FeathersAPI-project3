@@ -204,10 +204,9 @@ namespace Furs2Feathers.DataAccess.Migrations
                         .HasColumnName("age")
                         .HasColumnType("integer");
 
-                    b.Property<string>("CustomerId")
-                        .IsRequired()
+                    b.Property<int>("CustomerId")
                         .HasColumnName("customerId")
-                        .HasColumnType("text");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Description")
                         .HasColumnName("description")

@@ -19,7 +19,7 @@ namespace Furs2Feathers.DataAccess.Models
         public string ImgUrl { get; set; }
         public string Description { get; set; }
         [ForeignKey("Customer")]
-        public string CustomerId { get; set; }
+        public int CustomerId { get; set; }
         public string Species { get; set; }
         public int Age { get; set; }
         public string Sex { get; set; }

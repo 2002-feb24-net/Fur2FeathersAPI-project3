@@ -5,10 +5,10 @@ metadata:
   labels:
     app: f2f
     role: api
-    annotations:
-      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-2:367484709954:certificate/e4e9a175-7c5f-4018-9f6e-87996a4e610e
-      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
-      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: '443'
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-2:367484709954:certificate/e4e9a175-7c5f-4018-9f6e-87996a4e610e
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: '443'
 spec:
   type: LoadBalancer
   ports:
