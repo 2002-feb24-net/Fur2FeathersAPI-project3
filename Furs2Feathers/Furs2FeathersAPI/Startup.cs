@@ -13,8 +13,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-
+using Okta.AspNetCore;
 
 namespace Furs2FeathersAPI
 {
@@ -74,6 +75,8 @@ namespace Furs2FeathersAPI
             services.AddScoped<IPlanReviewsRepository, PlanReviewsRepository>();
             services.AddScoped<IPoliciesRepository, PoliciesRepository>();
 
+            
+
             // support switching between database providers using runtime configuration
             services.AddSwaggerGen(c =>
             {
@@ -90,6 +93,24 @@ namespace Furs2FeathersAPI
                         .AllowAnyHeader()
                         .AllowCredentials());
             });
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = OktaDefaults.ApiAuthenticationScheme;
+                options.DefaultChallengeScheme = OktaDefaults.ApiAuthenticationScheme;
+                options.DefaultSignInScheme = OktaDefaults.ApiAuthenticationScheme;
+            })
+            .AddOktaWebApi(new OktaWebApiOptions()
+            {
+                OktaDomain = "https://dev-514746.okta.com",
+            });
+
+            services.AddAuthorization();
+
+            services.AddLogging(logger =>
+                {
+                    logger.AddConfiguration(Configuration.GetSection("Logging"));
+                }
+            );
 
             services.AddControllers(options =>
             {
@@ -114,18 +135,17 @@ namespace Furs2FeathersAPI
             {
                 app.UseHttpsRedirection();
             }
+         
 
             app.UseRouting();
 
             app.UseCors(CorsPolicyName);
 
+            // Mish style injection and migrate
+            fdbContext.Database.Migrate();
+            app.UseAuthentication();
+
             app.UseAuthorization();
-            using (var scope =
-                    app.ApplicationServices.CreateScope())
-
-                // Mish style injection and migrate
-                fdbContext.Database.Migrate();
-
 
             app.UseSwagger();
 

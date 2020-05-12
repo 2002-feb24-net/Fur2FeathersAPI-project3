@@ -101,6 +101,9 @@ namespace Furs2Feathers.DataAccess.Models
                     .HasColumnName("customer_id");
 
                 entity.Property(e => e.Address).HasColumnName("address");
+                entity.Property(e => e.Name)
+                    .HasColumnName("name")
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Email)
                     .HasColumnName("email")
@@ -224,6 +227,9 @@ namespace Furs2Feathers.DataAccess.Models
                     .IsRequired()
                     .HasColumnName("age")
                     .HasColumnType("integer");
+                entity.Property(e => e.CustomerId)
+                    .IsRequired()
+                    .HasColumnName("customerId");
             });
 
             modelBuilder.Entity<Plan>(entity =>

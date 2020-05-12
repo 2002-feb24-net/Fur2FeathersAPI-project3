@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Furs2Feathers.DataAccess.Models;
 using Furs2Feathers.Domain.Interfaces;
+using Okta.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.Extensions.Logging;
 
 namespace Furs2FeathersAPI.Controllers
 {
@@ -18,14 +22,16 @@ namespace Furs2FeathersAPI.Controllers
         /// Private field. Initialized with the CustomerRepository and then has a constant reference (the field is readonly)
         /// </summary>
         private readonly ICustomerRepository customerRepo;
+        private readonly ILogger<CustomersController> logger;
 
         /// <summary>
         /// CustomerController. Manages customer calls to the database. Uses a wrapper for entity framework (CustomerRepository). Dependency injection of the CustomerRepository is done through startup.cs
         /// </summary>
         /// <param name="customerRepository"></param>
-        public CustomersController(ICustomerRepository customerRepository)
+        public CustomersController(ICustomerRepository customerRepository, ILogger<CustomersController> logger)
         {
             customerRepo = customerRepository;
+            this.logger = logger;
         }
 
         // GET: api/Customers
@@ -57,14 +63,27 @@ namespace Furs2FeathersAPI.Controllers
             return Ok(customer);
         }
 
-        // GET: api/Customers/5
-        [HttpGet("{email}")]
+        // GET: api/Customers/email
+        [HttpGet("email")]
+        [Authorize]
         [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Customer), StatusCodes.Status200OK)] // successful get request
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)] // if the user is not logged in or requests profile not belonging to them
         [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
-        public async Task<ActionResult<Furs2Feathers.Domain.Models.Customer>> GetCustomer(string email)
+        public ActionResult<Furs2Feathers.Domain.Models.Customer> GetCustomer()
         {
-            var customer = await customerRepo.FindAsync(e => e.Email == email);
+            var principal = HttpContext.User.Identity as ClaimsIdentity;
+       
+            var login = principal.Claims
+                .SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)
+                ?.Value;
+
+            this.logger.LogInformation("----" + login + "-----");
+            foreach(var val in principal.Claims)
+            {
+                this.logger.LogInformation("---| " +"type: "+val.Type+" |value:"+ val.Value + " |---");
+            }
+            var customer = customerRepo.FindbyEmail(login);
 
             if (customer == null)
             {

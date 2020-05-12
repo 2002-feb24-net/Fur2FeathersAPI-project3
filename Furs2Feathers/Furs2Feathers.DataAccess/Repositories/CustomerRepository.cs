@@ -87,6 +87,12 @@ namespace Furs2Feathers.DataAccess.Repositories
             return _context.Set<Domain.Models.Customer>().Where(predicate);
         }
 
+        public Domain.Models.Customer FindbyEmail(string email)
+        {
+            var res = _context.Customer.Where(x => x.Email == email).Include("AddressNavigation");
+            return Mapper.MapCustomer(res.First());
+        }
+
         /// <summary>
         /// Wraps a call to EF Core FindAsync and returns a mapped entity instead of a DataAccess.Model used to communicate with EF Core. This method has no tracking because a bug with PostgreSQL does not allow deletions that have tracking associated with them.
         /// 

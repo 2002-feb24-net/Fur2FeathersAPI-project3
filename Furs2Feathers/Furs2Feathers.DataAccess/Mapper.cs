@@ -40,9 +40,14 @@ namespace Furs2Feathers.DataAccess
             return new Domain.Models.Customer
             {
                 CustomerId = customer.CustomerId,
+                Name = customer.Name,
                 Email = customer.Email,
                 Phone = customer.Phone,
-                Policies = customer.Policies
+                Policies = customer.Policies,
+                street = customer.AddressNavigation.Street,
+                state = customer.AddressNavigation.State,
+                city = customer.AddressNavigation.City,
+                zip = customer.AddressNavigation.Zip
             };
         }
 

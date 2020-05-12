@@ -12,6 +12,7 @@ namespace Furs2Feathers.Domain.Interfaces
         void AddRange(IEnumerable<Customer> entities);
         bool Any(Expression<Func<Customer, bool>> predicate);
         IEnumerable<Customer> FindAsync(Expression<Func<Customer, bool>> predicate);
+        Customer FindbyEmail(string email);
         Task<Customer> FindAsync(int id);
         Task<Customer> FindAsyncAsNoTracking(int id);
         Task<IEnumerable<Customer>> GetAll();

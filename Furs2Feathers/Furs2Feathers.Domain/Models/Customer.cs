@@ -8,6 +8,7 @@ namespace Furs2Feathers.Domain.Models
     {
         public int CustomerId { get; set; }
         public int? Policies { get; set; }
+        public string Name { get; set; }
         public string street { get; set; }
         public string addr2 { get; set; }
         public string city { get; set; }

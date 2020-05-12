@@ -16,6 +16,7 @@ namespace Furs2Feathers.DataAccess.Models
         public int CustomerId { get; set; }
         public int? Policies { get; set; }
         public int? Address { get; set; }
+        public string Name { get; set; }
         [Required]
         public string Email { get; set; }
         public string Phone { get; set; }
