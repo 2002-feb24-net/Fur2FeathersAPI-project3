@@ -46,12 +46,12 @@ stages:
       displayName: sonarcloud prepare
       inputs:
         SonarCloud: 'f2f-ng'
-        organization: 'jhbui1'
+        organization: '2002-feb24-net'
         scannerMode: 'MSBuild'
         projectKey: '2002-feb24-net_Fur2FeathersAPI-project3'
         projectName: 'f2f-api'
         extraProperties: 'sonar.cs.opencover.reportsPaths=$(Common.TestResultsDirectory)/*/coverage.opencover.xml'
-    
+  
     - task: UseDotNet@2
       displayName: dotnet $(sdkVersion)
       inputs:
