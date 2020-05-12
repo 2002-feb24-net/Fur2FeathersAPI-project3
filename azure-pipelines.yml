@@ -42,15 +42,15 @@ stages:
         packageType: 'sdk'
         version: '2.1.x'
 
-  - task: SonarCloudPrepare@1
-    displayName: sonarcloud prepare
-    inputs:
-      SonarCloud: 'f2f-ng'
-      organization: 'jhbui1'
-      scannerMode: 'MSBuild'
-      projectKey: '2002-feb24-net_Fur2FeathersAPI-project3'
-      projectName: 'f2f-api'
-      extraProperties: 'sonar.cs.opencover.reportsPaths=$(Common.TestResultsDirectory)/*/coverage.opencover.xml'
+    - task: SonarCloudPrepare@1
+      displayName: sonarcloud prepare
+      inputs:
+        SonarCloud: 'f2f-ng'
+        organization: 'jhbui1'
+        scannerMode: 'MSBuild'
+        projectKey: '2002-feb24-net_Fur2FeathersAPI-project3'
+        projectName: 'f2f-api'
+        extraProperties: 'sonar.cs.opencover.reportsPaths=$(Common.TestResultsDirectory)/*/coverage.opencover.xml'
     
     - task: UseDotNet@2
       displayName: dotnet $(sdkVersion)
