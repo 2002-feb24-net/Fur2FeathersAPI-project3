@@ -11,6 +11,8 @@ using Furs2Feathers.DataAccess.Repositories;
 using Furs2Feathers.Domain.Interfaces;
 using Furs2Feathers.Domain.Models;
 using FluentAssertions;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Furs2Feathers.Test.Controllers
 {
@@ -18,18 +20,18 @@ namespace Furs2Feathers.Test.Controllers
     {
         public AddressesControllerTests()
         {
-           
+            addressRepo = new Mock<IAddressRepository>();
         }
 
-        private Mock<IAddressRepository> addressRepo => new Mock<IAddressRepository>();
+        private Mock<IAddressRepository> addressRepo { get; set; }
 
         [Fact()]
-        public void GetAddresses()
+        public async void GetAddresses()
         {
             // create a list of addresses to return
             var listOfAddresses = new List<Address>();
 
-            listOfAddresses.Add(new Address
+            listOfAddresses.Add(new Address()
             {
                 AddressId = 1,
                 Street = "123 Easy St",
@@ -41,10 +43,13 @@ namespace Furs2Feathers.Test.Controllers
 
 
             addressRepo.Setup(x => x.ToListAsync()).ReturnsAsync(listOfAddresses);
+           
             // when ToListAsync is called, return this listOfaddresses instead (in order to test without dependencies)
 
             var addressesController = new AddressesController(addressRepo.Object);
-            addressesController.GetAddress();
+            var result = await addressesController.GetAddress();
+            var valuesOfresult = (result.Result as OkObjectResult).Value;
+            valuesOfresult.Should().BeEquivalentTo(listOfAddresses);
             addressesController.Should().NotBeNull();
 
             /* var mockRepo = AddressRepo;
