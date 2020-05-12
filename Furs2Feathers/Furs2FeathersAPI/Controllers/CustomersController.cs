@@ -131,6 +131,8 @@ namespace Furs2FeathersAPI.Controllers
         {
             customerRepo.Add(customer);
             await customerRepo.SaveChangesAsync();
+            int highest_id = customerRepo.HighestID();
+            customer.CustomerId = highest_id;
 
             return CreatedAtAction("GetCustomer", new { id = customer.CustomerId }, customer);
         }
