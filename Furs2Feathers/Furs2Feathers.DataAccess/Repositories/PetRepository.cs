@@ -97,6 +97,18 @@ namespace Furs2Feathers.DataAccess.Repositories
             return Mapper.MapPet(data);
         }
 
+        public IEnumerable<Domain.Models.Pet> FindByCustId(int custId)
+        {
+            var res = _context.Pet.Where(x => x.CustomerId == custId);
+            var mappedEntities = new List<Domain.Models.Pet>();
+            foreach (var entity in res)
+            {
+                mappedEntities.Add(Mapper.MapPet(entity));
+            }
+            return mappedEntities;
+
+        }
+
         /// <summary>
         /// Wraps a call to EF Core FindAsync and returns a mapped entity instead of a DataAccess.Model used to communicate with EF Core.
         /// 
