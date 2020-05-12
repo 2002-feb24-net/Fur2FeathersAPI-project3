@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Furs2Feathers.DataAccess.Migrations
 {
     [DbContext(typeof(f2fdbContext))]
-    [Migration("20200511043802_asdsasa")]
-    partial class asdsasa
+    [Migration("20200512154905_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -97,6 +97,11 @@ namespace Furs2Feathers.DataAccess.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnName("email")
+                        .HasColumnType("character varying(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Name")
+                        .HasColumnName("name")
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
@@ -199,6 +204,10 @@ namespace Furs2Feathers.DataAccess.Migrations
 
                     b.Property<int>("Age")
                         .HasColumnName("age")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnName("customerId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Description")
