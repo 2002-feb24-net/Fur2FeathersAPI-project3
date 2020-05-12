@@ -68,7 +68,7 @@ namespace Furs2FeathersAPI.Controllers
 
         // GET: api/Customers/5
         [HttpGet("{email}")]
-        [Route("GetCustomerByEmail")]
+        //[Route("GetCustomerByEmail")]
         [ProducesResponseType(typeof(Furs2Feathers.Domain.Models.Customer), StatusCodes.Status200OK)] // successful get request
         [ProducesResponseType(StatusCodes.Status404NotFound)] // from query of an id that does not exist
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]  // if something unexpectedly went wrong with the database or http request/response
