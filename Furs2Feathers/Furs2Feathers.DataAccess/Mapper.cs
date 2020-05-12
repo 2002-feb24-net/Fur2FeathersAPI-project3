@@ -44,10 +44,10 @@ namespace Furs2Feathers.DataAccess
                 Email = customer.Email,
                 Phone = customer.Phone,
                 Policies = customer.Policies,
-                street = customer.AddressNavigation.Street,
-                state = customer.AddressNavigation.State,
-                city = customer.AddressNavigation.City,
-                zip = customer.AddressNavigation.Zip
+                street = customer.AddressNavigation?.Street,
+                state = customer.AddressNavigation?.State,
+                city = customer.AddressNavigation?.City,
+                zip = customer.AddressNavigation?.Zip
             };
         }
 
