@@ -272,7 +272,7 @@ namespace Furs2Feathers.DataAccess.Repositories
             return await _context.SaveChangesAsync();
         }
 
-        int HighestID()
+        public int HighestID()
         {
             return _context.Customer.OrderByDescending(x => x.CustomerId).FirstOrDefault().CustomerId;
         }
