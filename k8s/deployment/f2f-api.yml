@@ -44,5 +44,9 @@ spec:
           value: http://a968100db8e724fb0b7d96626d2657ff-1546671109.us-east-2.elb.amazonaws.com
         - name: CorsOrigins__7
           value: https://localhost:4200
+        - name: CorsOrigins__8
+          value: https://f2f-api.2002.revaturelabs.com
+        - name: CorsOrigins__9
+          value: https://f2f.2002.revaturelabs.com
         - name: UseHttpsRedirection
           value: 'false'
