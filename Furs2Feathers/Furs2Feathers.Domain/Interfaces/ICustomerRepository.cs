@@ -23,5 +23,6 @@ namespace Furs2Feathers.Domain.Interfaces
         void Save();
         Task<int> SaveChangesAsync();
         Task<IEnumerable<Customer>> ToListAsync();
+        int HighestID();
     }
 }
