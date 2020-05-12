@@ -45,7 +45,7 @@ spec:
         - name: CorsOrigins__7
           value: https://localhost:4200
         - name: CorsOrigins__8
-          value: https://f2f-api.2002.revaturelabs.com
+          value: http://f2f.2002.revaturelabs.com
         - name: CorsOrigins__9
           value: https://f2f.2002.revaturelabs.com
         - name: UseHttpsRedirection
