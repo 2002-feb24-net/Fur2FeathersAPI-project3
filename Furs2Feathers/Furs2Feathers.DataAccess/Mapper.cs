@@ -87,6 +87,7 @@ namespace Furs2Feathers.DataAccess
                 ImgUrl = pet.ImgUrl,
                 Age = pet.Age,
                 Sex = pet.Sex,
+                CustomerId = pet.CustomerId,
                 Invoice = pet.Invoice.Select(MapInvoice).ToList(),
                 Policies = pet.Policies.Select(MapPolicies).ToList()
             };
@@ -183,6 +184,7 @@ namespace Furs2Feathers.DataAccess
                 Email = customer.Email,
                 Phone = customer.Phone,
                 Policies = customer.Policies,
+                Name = customer.Name
                 //AddressNavigation = MapAddress(customer.AddressNavigation)
                 //PoliciesNavigation = MapPolicies(customer.PoliciesNavigation),
                 //Invoice = customer.Invoice.Select(MapInvoice).ToList(),
@@ -227,6 +229,7 @@ namespace Furs2Feathers.DataAccess
                 ImgUrl = pet.ImgUrl,
                 Age = pet.Age,
                 Sex = pet.Sex,
+                CustomerId= pet.CustomerId,
                 Invoice = pet.Invoice.Select(MapInvoice).ToList(),
                 Policies = pet.Policies.Select(MapPolicies).ToList()
             };
